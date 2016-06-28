@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SCLibrary</string>
+    <string name="dialog_loading">加载中&#8230;</string>
+    <string name="error_configuration">Please configure your serial port first.</string>
+    <string name="error_security">You do not have read/write permission to the serial port.</string>
+    <string name="error_unknown">The serial port can not be opened for an unknown reason.</string>
+
+    <string name="weekday_sunday">星期日</string>
+    <string name="weekday_monday">星期一</string>
+    <string name="weekday_tuesday">星期二</string>
+    <string name="weekday_wednesday">星期三</string>
+    <string name="weekday_thursday">星期四</string>
+    <string name="weekday_friday">星期五</string>
+    <string name="weekday_saturday">星期六</string>
+
+    <string name="confirm">确定</string>
+</resources>

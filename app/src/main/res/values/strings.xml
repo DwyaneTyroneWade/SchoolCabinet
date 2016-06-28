@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SchoolCabinet</string>
+    <string name="company_name_ch">杭州西野</string>
+    <string name="back_btn">返回</string>
+    <string name="edit_title_student">请输入学号及密码</string>
+    <string name="edit_title_admin">请输入账号及密码</string>
+    <string name="student_number">学号</string>
+    <string name="account">账号</string>
+    <string name="password">密码</string>
+    <string name="copy_right">Copyright©%1$s  51xiye.com</string>
+    <string name="account_necessray">请输入账号</string>
+    <string name="pwd_necessray">请输入密码</string>
+    <string name="cabinet_id_verify">学生柜ID号验证</string>
+    <string name="cabinet_id">学生柜ID号</string>
+    <string name="open_single_box">开单个学生柜</string>
+    <string name="student_or_box_number">学号或柜号</string>
+    <string name="open_all_boxes">开所有的学生柜</string>
+    <string name="open_all_confirm">全开，确定</string>
+    <string name="cabinet_status">学生柜状态</string>
+    <string name="status_confirm">状态，确定</string>
+</resources>

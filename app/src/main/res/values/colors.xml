@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="main_background_tiffany_blue">#d9f6fa</color>
+    <color name="text_color_pink">#d00072</color>
+    <color name="color_green">#35d969</color>
+    <color name="color_blue">#2cd1d7</color>
+</resources>
