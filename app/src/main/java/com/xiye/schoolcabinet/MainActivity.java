@@ -6,17 +6,18 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.xiye.schoolcabinet.delegates.MainActivityDelegate;
-import com.xiye.schoolcabinet.utils.Dispatcher;
+import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
+import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.utils.SCConstants;
 import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.dialog.DialogFactory;
 import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
 
-public class MainActivity extends SerialPortActivity implements View.OnClickListener, View.OnLongClickListener {
+public class MainActivity extends SerialPortActivity implements View.OnClickListener, View.OnLongClickListener, ConfigManager.GetAllCardInfoCallBack {
     private MainActivityDelegate mDelegate;
-    private boolean isCabinetIdVerified = false;
     private ImageView logo;
+    private boolean hasGoVerifyId = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +28,21 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         L.d("sh:" + Tools.getScreenHeight(this));
         mDelegate = new MainActivityDelegate(this);
         mDelegate.setmOutputStreamLock(mOutputStreamLock);
-        getExtras();
+//        getExtras();
         initView();
-        checkExtras();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getBasicData();
     }
 
     private void getExtras() {
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            Bundle extras = getIntent().getExtras();
-            isCabinetIdVerified = extras.getBoolean(SCConstants.BUNDLE_KEY_IS_CABINET_ID_VERIFIED);
-        }
+//        if (getIntent() != null && getIntent().getExtras() != null) {
+//            Bundle extras = getIntent().getExtras();
+//        }
     }
 
     private void initView() {
@@ -44,14 +50,21 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         findViewById(R.id.save).setOnClickListener(this);
         logo = (ImageView) findViewById(R.id.logo);
         logo.setOnLongClickListener(this);
+        findViewById(R.id.btn_no_card).setOnClickListener(this);
     }
 
-    private void checkExtras() {
-        //TODO push
-        if (!isCabinetIdVerified) {
-            Bundle extras = new Bundle();
-            extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.ADMIN);
-            Dispatcher.goLogin(this, extras);
+    private void getBasicData() {
+        String cabinetId = ConfigManager.getCabinetId();
+        if (Tools.isStringEmpty(cabinetId)) {//保证只有在从系统运行app（关闭-->开启）的时候直接进入管理员界面
+            if (!hasGoVerifyId) {
+                Bundle extras = new Bundle();
+                extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.ADMIN);
+                ActivityDispatcher.goLogin(this, extras);
+                hasGoVerifyId = true;
+            }
+        } else {
+            //每次onResume都会去去一次数据，理论上来说是不对的，应该只在验证ID的地方取一次，其他情况需要服务器通知
+            ConfigManager.getAllCardInfo(this, this);
         }
     }
 
@@ -104,6 +117,9 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
                 });
                 DialogFactory.showDialog(dialog2);
                 break;
+            case R.id.btn_no_card:
+                dealWithNoCardClick();
+                break;
             default:
                 break;
         }
@@ -121,7 +137,7 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
             case R.id.logo:
                 Bundle extras = new Bundle();
                 extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.ADMIN);
-                Dispatcher.goLogin(this, extras);
+                ActivityDispatcher.goLogin(this, extras);
                 return true;
         }
         return false;
@@ -131,14 +147,34 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         Bundle extras = new Bundle();
         extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.STUDENT);
         extras.putSerializable(SCConstants.BUNDLE_KEY_OPERATION_TYPE, MainActivityDelegate.OperationType.GET);
-        Dispatcher.goLogin(this, extras);
+        ActivityDispatcher.goLogin(this, extras);
     }
 
     private void dealWithSaveClick() {
         Bundle extras = new Bundle();
         extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.STUDENT);
         extras.putSerializable(SCConstants.BUNDLE_KEY_OPERATION_TYPE, MainActivityDelegate.OperationType.SAVE);
-        Dispatcher.goLogin(this, extras);
+        ActivityDispatcher.goLogin(this, extras);
     }
 
+    private void dealWithNoCardClick() {
+        Bundle extras = new Bundle();
+        extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.STUDENT);
+        ActivityDispatcher.goLogin(this, extras);
+    }
+
+    @Override
+    public void onGetDataSuc() {
+//        dismissLoading();
+    }
+
+    @Override
+    public void onGetDataStart() {
+//        showLoading();
+    }
+
+    @Override
+    public void onGetDataFail() {
+//        dismissLoading();
+    }
 }

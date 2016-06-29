@@ -6,10 +6,10 @@ import com.xiye.schoolcabinet.MainActivity;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.beans.Card;
 import com.xiye.schoolcabinet.database.manager.CardTableManager;
-import com.xiye.schoolcabinet.helpers.BroadCastHelper;
+import com.xiye.schoolcabinet.dispatcher.BroadCastDispatcher;
 import com.xiye.schoolcabinet.manager.DBManager;
 import com.xiye.schoolcabinet.utils.ActivityStack;
-import com.xiye.schoolcabinet.utils.Dispatcher;
+import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.schoolcabinet.utils.SCConstants;
 import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.net.needle.Needle;
@@ -58,12 +58,12 @@ public class MainActivityDelegate {
         if (ADMIN_ACCOUNT_1.equals(str)) {
             Bundle extras = new Bundle();
             extras.putString(SCConstants.BUNDLE_KEY_CARD_ID, str);
-            Dispatcher.goAdmin(activity, extras);
+            ActivityDispatcher.goAdmin(activity, extras);
         } else {
             if (ActivityStack.getInstance().currentActivity() instanceof MainActivity) {
                 doAction(str);
             } else {
-                BroadCastHelper.sendOnICOutsideDataReceived(str, activity);
+                BroadCastDispatcher.sendOnICOutsideDataReceived(str, activity);
             }
         }
     }

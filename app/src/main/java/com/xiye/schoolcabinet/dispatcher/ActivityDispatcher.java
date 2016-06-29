@@ -1,4 +1,4 @@
-package com.xiye.schoolcabinet.utils;
+package com.xiye.schoolcabinet.dispatcher;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import com.xiye.schoolcabinet.modules.login.LoginActivity;
 /**
  * Created by wushuang on 6/7/16.
  */
-public class Dispatcher {
+public class ActivityDispatcher {
     public static void goAdmin(Context context, Bundle extras) {
         Intent intent = new Intent(context, AdminActivity.class);
         if (extras != null) {

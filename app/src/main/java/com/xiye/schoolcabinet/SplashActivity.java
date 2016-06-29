@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.xiye.schoolcabinet.base.BaseActivity;
-import com.xiye.schoolcabinet.utils.Dispatcher;
-import com.xiye.schoolcabinet.utils.SCConstants;
-import com.xiye.sclibrary.utils.PreferenceHelper;
+import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.sclibrary.utils.TimeUtils;
 
 /**
@@ -48,10 +46,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void goNext() {
-        boolean isCabinetIdVerified = PreferenceHelper.getBoolean(SCConstants.PREFERENCE_KEY_CABINET_ID, false);
-        Bundle extras = new Bundle();
-        extras.putBoolean(SCConstants.BUNDLE_KEY_IS_CABINET_ID_VERIFIED, isCabinetIdVerified);
-        Dispatcher.goMain(this, extras);
+        ActivityDispatcher.goMain(this, null);
         finish();
     }
 }

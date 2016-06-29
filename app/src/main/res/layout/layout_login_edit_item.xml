@@ -43,11 +43,12 @@
                 android:textColor="@color/text_color_black"
                 android:textSize="@dimen/text_size_small" />
 
-            <EditText
+            <com.xiye.sclibrary.widget.edittext.DeleteableEditText
                 android:id="@+id/et_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:imeOptions="flagNoExtractUi|flagNoFullscreen"
                 android:inputType="number"
                 android:textColor="@color/text_color_black"
                 android:textSize="@dimen/text_size_small" />
@@ -68,11 +69,12 @@
                 android:textColor="@color/text_color_black"
                 android:textSize="@dimen/text_size_small" />
 
-            <EditText
+            <com.xiye.sclibrary.widget.edittext.DeleteableEditText
                 android:id="@+id/et_pwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:imeOptions="flagNoExtractUi|flagNoFullscreen"
                 android:inputType="numberPassword"
                 android:textColor="@color/text_color_black"
                 android:textSize="@dimen/text_size_small" />

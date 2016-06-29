@@ -18,4 +18,6 @@
     <string name="open_all_confirm">全开，确定</string>
     <string name="cabinet_status">学生柜状态</string>
     <string name="status_confirm">状态，确定</string>
+    <string name="no_card">无卡操作</string>
+    <string name="open_box">开箱</string>
 </resources>

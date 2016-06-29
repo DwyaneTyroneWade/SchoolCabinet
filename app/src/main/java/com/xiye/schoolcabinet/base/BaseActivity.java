@@ -3,12 +3,20 @@ package com.xiye.schoolcabinet.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.RequestQueue.RequestFilter;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.helpers.ClockHelper;
@@ -16,7 +24,9 @@ import com.xiye.schoolcabinet.utils.ActivityStack;
 import com.xiye.sclibrary.base.C;
 import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.loading.LoadingDialog;
+import com.xiye.sclibrary.net.volley.BaseResultBean;
 import com.xiye.sclibrary.net.volley.WillCancelDelegate;
+import com.xiye.sclibrary.utils.ToastHelper;
 
 
 public abstract class BaseActivity extends FragmentActivity {
@@ -186,5 +196,35 @@ public abstract class BaseActivity extends FragmentActivity {
         }
         mMsgLoadingDialog.setMessage(msg);
         mMsgLoadingDialog.show();
+    }
+
+    public void processErrorCode(BaseResultBean result) {
+        // TODO 提示用户Dialog
+        if (result == null) {
+            return;
+        }
+
+        L.d("error_no:" + result.err_no + "err_msg:" + result.err_msg);
+
+        if (!TextUtils.isEmpty(result.err_msg) && !"FALSE".equals(result.err_msg.toUpperCase())) {
+            ToastHelper.showShortToast(result.err_msg);
+        }
+    }
+
+    public void processVolleyError(VolleyError error) {
+        L.volleyError(error);
+        if (error != null) {
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                ToastHelper.showShortToast(R.string.err_network_timeout);
+            } else if (error instanceof AuthFailureError) {
+                //TODO
+            } else if (error instanceof ServerError) {
+                //TODO
+            } else if (error instanceof NetworkError) {
+                //TODO
+            } else if (error instanceof ParseError) {
+                //TODO
+            }
+        }
     }
 }

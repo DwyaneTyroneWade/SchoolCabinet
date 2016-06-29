@@ -14,4 +14,6 @@
     <string name="weekday_saturday">星期六</string>
 
     <string name="confirm">确定</string>
+
+    <string name="err_network_timeout">请求网络超时</string>
 </resources>

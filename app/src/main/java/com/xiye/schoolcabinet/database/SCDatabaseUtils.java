@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.xiye.schoolcabinet.beans.Card;
+import com.xiye.schoolcabinet.beans.Record;
 import com.xiye.schoolcabinet.database.SCTables.CardTable;
 import com.xiye.sclibrary.base.C;
 
@@ -77,4 +78,75 @@ public class SCDatabaseUtils {
     }
 
     /** CardTable**end ***/
+
+    /**
+     * RecordTable**start
+     ***/
+    public static Cursor queryRecord(Record record) {
+        return C.get()
+                .getContentResolver()
+                .query(SCTables.RecordTable.CONTENT_URI, null, SCTables.RecordTable.CARDID + " =? ",
+                        new String[]{record.cardId}, null);
+    }
+
+    public static Cursor queryRecord() {
+        return C.get().getContentResolver()
+                .query(SCTables.RecordTable.CONTENT_URI, null, null, null, null);
+    }
+
+    public static void updateRecord(Record record) {
+        ContentValues values = appendValues(record);
+        C.get().getContentResolver()
+                .update(SCTables.RecordTable.CONTENT_URI, values, SCTables.RecordTable.CARDID + "=?",
+                        new String[]{record.cardId});
+    }
+
+    public static void insertRecord(Record record) {
+        ContentValues values = appendValues(record);
+        C.get().getContentResolver().insert(SCTables.RecordTable.CONTENT_URI, values);
+    }
+
+    public static void deleteRecord(Record record) {
+        C.get().getContentResolver()
+                .delete(SCTables.RecordTable.CONTENT_URI, SCTables.RecordTable.CARDID + "=?",
+                        new String[]{record.cardId});
+    }
+
+    public static void deleteRecord() {
+        C.get().getContentResolver().delete(SCTables.RecordTable.CONTENT_URI, null, null);
+    }
+
+    private static ContentValues appendValues(Record record) {
+        ContentValues values = new ContentValues();
+        values.put(SCTables.RecordTable.CARDID, record.cardId);
+        values.put(SCTables.RecordTable.CABINETID, record.cabinetId);
+        values.put(SCTables.RecordTable.BOXID, record.boxId);
+        values.put(SCTables.RecordTable.OPERATION_TIME, record.operationTime);
+
+        return values;
+    }
+
+    public static ArrayList<Record> getRecords(Cursor c) {
+        ArrayList<Record> recordsArr = new ArrayList<Record>();
+
+        if (c == null || c.getCount() <= 0) {
+            return recordsArr;
+        }
+
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Record record = new Record();
+            record.cardId = c.getString(c.getColumnIndex(SCTables.RecordTable.CARDID));
+            record.cabinetId = c.getString(c.getColumnIndex(SCTables.RecordTable.CABINETID));
+            record.boxId = c.getString(c.getColumnIndex(SCTables.RecordTable.BOXID));
+            record.operationTime = c.getString(c.getColumnIndex(SCTables.RecordTable.OPERATION_TIME));
+
+            recordsArr.add(record);
+            c.moveToNext();
+        }
+
+        return recordsArr;
+    }
+
+    /** RecordTable**end ***/
 }

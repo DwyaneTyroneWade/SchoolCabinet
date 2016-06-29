@@ -4,14 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.delegates.login.LoginActivityDelegate;
-import com.xiye.schoolcabinet.utils.Dispatcher;
+import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.schoolcabinet.utils.SCConstants;
+import com.xiye.sclibrary.widget.edittext.DeleteableEditText;
 
 /**
  * Created by wushuang on 6/25/16.
@@ -19,7 +19,7 @@ import com.xiye.schoolcabinet.utils.SCConstants;
 public class LoginActivity extends BaseActivity implements View.OnClickListener, LoginActivityDelegate.LoginCallBack {
     private SCConstants.LoginType loginType;
     private TextView tvEditTitle, tvAccount;
-    private EditText etAccount, etPwd;
+    private DeleteableEditText etAccount, etPwd;
     private Button btnConfirm, btnBack;
 
     private LoginActivityDelegate mDelegate;
@@ -44,8 +44,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private void initView() {
         tvEditTitle = (TextView) findViewById(R.id.tv_edit_title);
         tvAccount = (TextView) findViewById(R.id.tv_account);
-        etAccount = (EditText) findViewById(R.id.et_account);
-        etPwd = (EditText) findViewById(R.id.et_pwd);
+        etAccount = (DeleteableEditText) findViewById(R.id.et_account);
+        etPwd = (DeleteableEditText) findViewById(R.id.et_pwd);
         btnConfirm = (Button) findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(this);
         btnBack = (Button) findViewById(R.id.btn_back);
@@ -111,11 +111,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case ADMIN:
             default:
                 //TODO
-                Dispatcher.goAdmin(this, null);
+                ActivityDispatcher.goAdmin(this, null);
                 this.finish();
                 break;
             case STUDENT:
-                //TODO 开箱
+                //TODO 开箱，记录开箱数据
                 this.finish();
                 break;
         }

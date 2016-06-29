@@ -11,15 +11,18 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.xiye.schoolcabinet.database.SCTables.CardTable;
+import com.xiye.schoolcabinet.database.SCTables.RecordTable;
 
 public class SCContentProvider extends ContentProvider {
     private static final int CARD = 1000;
+    private static final int RECORD = 1001;
 
     private static final UriMatcher MATCHER;
 
     static {
         MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         MATCHER.addURI(SCTables.AUTHORITY, CardTable.TABLE_NAME, CARD);
+        MATCHER.addURI(SCTables.AUTHORITY, RecordTable.TABLE_NAME, RECORD);
     }
 
     private SCDatabaseHelper mHelper;
@@ -43,6 +46,9 @@ public class SCContentProvider extends ContentProvider {
         switch (match) {
             case CARD:
                 builder.setTables(CardTable.TABLE_NAME);
+                break;
+            case RECORD:
+                builder.setTables(RecordTable.TABLE_NAME);
                 break;
             default:
                 throw new UnsupportedOperationException("unkown uri:"
@@ -80,6 +86,10 @@ public class SCContentProvider extends ContentProvider {
                 rowId = mHelper.getWritableDatabase().insert(CardTable.TABLE_NAME,
                         null, values);
                 break;
+            case RECORD:
+                rowId = mHelper.getWritableDatabase().insert(RecordTable.TABLE_NAME,
+                        null, values);
+                break;
             default:
                 throw new UnsupportedOperationException("unkown uri:"
                         + uri.toString());
@@ -101,6 +111,9 @@ public class SCContentProvider extends ContentProvider {
         switch (match) {
             case CARD:
                 table = CardTable.TABLE_NAME;
+                break;
+            case RECORD:
+                table = RecordTable.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("unkown uri:"
@@ -125,6 +138,9 @@ public class SCContentProvider extends ContentProvider {
         switch (match) {
             case CARD:
                 table = CardTable.TABLE_NAME;
+                break;
+            case RECORD:
+                table = RecordTable.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("unkown uri:"

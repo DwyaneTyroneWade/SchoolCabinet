@@ -18,6 +18,7 @@ public class SCDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
         db.execSQL(SCTables.CardTable.SQL_CREATE);
+        db.execSQL(SCTables.RecordTable.SQL_CREATE);
     }
 
     @Override

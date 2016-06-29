@@ -21,4 +21,8 @@
         <attr name="layout_paddingLeftPercent" format="string" />
         <attr name="layout_paddingRightPercent" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="DeleteableEditText">
+        <attr name="deleteDrawable" format="reference" />
+    </declare-styleable>
 </resources>

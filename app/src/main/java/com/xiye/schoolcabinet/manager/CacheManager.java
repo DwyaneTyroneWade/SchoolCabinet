@@ -17,6 +17,10 @@ public class CacheManager {
     public static final String CACHE_KEY_CABINET_ID_ALREADY = "cabinet_id_already";
 
 
+    public static final String CACHE_KEY_CARD_INFO_BEAN = "card_info_bean";
+    public static final String CACHE_KEY_CABINET_ID= "cabinet_id";
+
+
     public static void setCache(String key, String value) {
         C.get().getSharedPreferences(CACHE_FILE, Context.MODE_PRIVATE).edit().putString(generatedKey(key), value).commit();
     }
