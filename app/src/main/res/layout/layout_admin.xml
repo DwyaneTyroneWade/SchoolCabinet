@@ -39,14 +39,13 @@
                     android:textColor="@color/text_color_black"
                     android:textSize="@dimen/text_size_small" />
 
-                <com.xiye.sclibrary.widget.edittext.DeleteableEditText
+                <EditText
                     android:id="@+id/et_cabinet_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/btn_verify_id"
                     android:layout_toRightOf="@id/tv_cabinet_id"
-                    android:imeOptions="flagNoFullscreen|flagNoExtractUi"
-                    android:inputType="number" />
+                    android:imeOptions="flagNoFullscreen|flagNoExtractUi" />
 
                 <Button
                     android:id="@+id/btn_verify_id"
@@ -138,7 +137,7 @@
                     android:textColor="@color/text_color_black"
                     android:textSize="@dimen/text_size_small" />
 
-                <com.xiye.sclibrary.widget.edittext.DeleteableEditText
+                <EditText
                     android:id="@+id/et_student_or_box_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

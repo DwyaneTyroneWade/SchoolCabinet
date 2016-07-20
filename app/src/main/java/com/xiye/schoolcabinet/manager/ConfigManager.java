@@ -14,12 +14,11 @@ import com.xiye.sclibrary.utils.Tools;
  * Created by wushuang on 6/28/16.
  */
 public class ConfigManager {
-    public static void getAllCardInfo(final BaseActivity activity, final GetAllCardInfoCallBack callBack) {
+    public static void getAllCardInfo(final String cabinetId, final BaseActivity activity, final GetAllCardInfoCallBack callBack) {
         if (activity == null) {
             return;
         }
 
-        String cabinetId = getCabinetId();
         if (Tools.isStringEmpty(cabinetId)) {
             return;
         }
@@ -32,9 +31,10 @@ public class ConfigManager {
             @Override
             public void onResponse(CardInfoBean bean) {
                 if (bean != null && bean.err_no == ServerConstants.SUCCESS_CODE) {
+                    ConfigManager.setCabinetId(cabinetId);
                     saveCardInfoToDB(bean);
                     if (callBack != null) {
-                        callBack.onGetDataSuc();
+                        callBack.onGetDataSuc(bean);
                     }
                 } else {
                     if (bean != null) {
@@ -62,7 +62,7 @@ public class ConfigManager {
         CacheManager.setSerializableCache(CacheManager.CACHE_KEY_CARD_INFO_BEAN, bean);
     }
 
-    public static CardInfoBean getCardInfoToDB() {
+    public static CardInfoBean getCardInfoFromDB() {
         return (CardInfoBean) CacheManager.loadSerializableCache(CacheManager.CACHE_KEY_CARD_INFO_BEAN);
     }
 
@@ -75,7 +75,6 @@ public class ConfigManager {
     }
 
     public interface GetAllCardInfoCallBack extends BaseCallBackListener {
-        void onGetDataSuc();
+        void onGetDataSuc(CardInfoBean bean);
     }
-
 }

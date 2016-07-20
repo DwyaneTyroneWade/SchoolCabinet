@@ -2,8 +2,10 @@ package com.xiye.schoolcabinet;
 
 import android.app.Application;
 
+import com.android.volley.VolleyLog;
 import com.xiye.schoolcabinet.utils.CrashHandler;
 import com.xiye.sclibrary.base.C;
+import com.xiye.sclibrary.base.Env;
 import com.xiye.sclibrary.base.L;
 
 import java.io.File;
@@ -19,11 +21,17 @@ public class App extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		C.set(this);
+		loadEnv();
 
 //		 TODO
 //		CrashHandler crashHandler = CrashHandler.getInstance();
 //		crashHandler.init(getApplicationContext());
 	}
+
+	private void loadEnv(){
+		VolleyLog.DEBUG = Env.LOGABLE;
+	}
+
 
 	public SerialPort getSerialPort(int parity, String path, int baudrate)
 			throws SecurityException, IOException, InvalidParameterException {

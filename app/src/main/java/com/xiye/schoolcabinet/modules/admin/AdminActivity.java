@@ -1,76 +1,72 @@
 package com.xiye.schoolcabinet.modules.admin;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
+import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.delegates.admin.AdminActivityDelegate;
+import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.utils.SCConstants;
-import com.xiye.sclibrary.dialog.DialogFactory;
+import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 
 /**
  * Created by wushuang on 6/7/16.
  */
-public class AdminActivity extends BaseActivity implements View.OnClickListener, AdminActivityDelegate.AdminActivityCallBack {
+public class AdminActivity extends BaseActivity implements View.OnClickListener, AdminActivityDelegate.AdminActivityCallBack, ConfigManager.GetAllCardInfoCallBack {
     private AdminActivityDelegate mDelegate;
-    private AdminAction adminAction;
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null) {
-                return;
-            }
-            String action = intent.getAction();
-            if (Tools.isStringEmpty(action)) {
-                return;
-            }
-
-            if (SCConstants.ACTION_ON_CARD_OUTSIDE_READ.equals(action)) {
-                String cardId = intent.getStringExtra(SCConstants.BUNDLE_KEY_CARD_ID);
-                if (adminAction == AdminAction.REGISTER) {
-                    mDelegate.register(cardId);
-                }
-            }
-        }
-    };
+    //    private AdminAction adminAction;
+//    BroadcastReceiver receiver = new BroadcastReceiver() {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent == null) {
+//                return;
+//            }
+//            String action = intent.getAction();
+//            if (Tools.isStringEmpty(action)) {
+//                return;
+//            }
+//
+//            if (BroadCastDispatcher.ACTION_ON_CARD_OUTSIDE_READ.equals(action)) {
+//                String cardId = intent.getStringExtra(SCConstants.BUNDLE_KEY_CARD_ID);
+//                if (adminAction == AdminAction.REGISTER) {
+//                    mDelegate.register(cardId);
+//                }
+//            }
+//        }
+//    };
     private String adminId;
-    private TextView tvID;
+//    private TextView tvID;
 
     private Button btnBack, btnVerifyId, btnOpenAll, btnStatus, btnSingle;
     private EditText etVerifyId, etStudentOrBoxId;
 
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SCConstants.ACTION_ON_CARD_OUTSIDE_READ);
-        registerReceiver(receiver, filter);
-    }
-
-    private void unregisterReceiver() {
-        unregisterReceiver(receiver);
-    }
+//    private void registerReceiver() {
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(BroadCastDispatcher.ACTION_ON_CARD_OUTSIDE_READ);
+//        registerReceiver(receiver, filter);
+//    }
+//
+//    private void unregisterReceiver() {
+//        unregisterReceiver(receiver);
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver();
+//        registerReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver();
+//        unregisterReceiver();
     }
 
     @Override
@@ -80,6 +76,7 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
         mDelegate = new AdminActivityDelegate(this, this);
         getExtras();
         initView();
+        initUI();
     }
 
     private void getExtras() {
@@ -100,6 +97,21 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
         btnSingle = (Button) findViewById(R.id.btn_open_single_box);
         btnSingle.setOnClickListener(this);
         btnOpenAll.setOnClickListener(this);
+
+        btnVerifyId = (Button) findViewById(R.id.btn_verify_id);
+        btnStatus = (Button) findViewById(R.id.btn_status_confirm);
+        btnVerifyId.setOnClickListener(this);
+        btnStatus.setOnClickListener(this);
+    }
+
+
+    private void initUI() {
+        String cabinetId = ConfigManager.getCabinetId();
+        if (!Tools.isStringEmpty(cabinetId)) {
+            etVerifyId.setText(cabinetId);
+            etVerifyId.setEnabled(false);
+            btnVerifyId.setEnabled(false);
+        }
     }
 
 
@@ -116,13 +128,13 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.register:
-                adminAction = AdminAction.REGISTER;
-                AlertDialog dialog = DialogFactory.getTipDialog(this, "请刷卡注册");
-                DialogFactory.showDialog(dialog);
-                break;
-            case R.id.open:
-                break;
+//            case R.id.register:
+//                adminAction = AdminAction.REGISTER;
+//                AlertDialog dialog = DialogFactory.getTipDialog(this, "请刷卡注册");
+//                DialogFactory.showDialog(dialog);
+//                break;
+//            case R.id.open:
+//                break;
             case R.id.btn_back:
                 this.finish();
                 break;
@@ -132,21 +144,50 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
             case R.id.btn_open_single_box:
                 //TODO
                 break;
+            case R.id.btn_verify_id:
+                //TODO
+                mDelegate.verifyId(etVerifyId.getText().toString(), this);
+                break;
+            case R.id.btn_status_confirm:
+                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void onRegisterSuc() {
-        adminAction = null;
-        AlertDialog dialog = DialogFactory.getTipDialog(this, "注册成功");
-        DialogFactory.showDialog(dialog);
+    public void onGetDataSuc(CardInfoBean bean) {
+        dismissLoading();
+        ToastHelper.showShortToast(R.string.verify_cabinet_id_suc);
+        updateUI();
     }
 
-
-    private enum AdminAction {
-        REGISTER,
-        OPEN,
+    @Override
+    public void onGetDataStart() {
+        showLoading(R.string.verify_ing);
     }
+
+    @Override
+    public void onGetDataFail() {
+        dismissLoading();
+        ToastHelper.showShortToast(R.string.verify_cabinet_id_fail);
+    }
+
+    private void updateUI() {
+        etVerifyId.setEnabled(false);
+        btnVerifyId.setEnabled(false);
+    }
+
+//    @Override
+//    public void onRegisterSuc() {
+//        adminAction = null;
+//        AlertDialog dialog = DialogFactory.getTipDialog(this, "注册成功");
+//        DialogFactory.showDialog(dialog);
+//    }
+
+
+//    private enum AdminAction {
+//        REGISTER,
+//        OPEN,
+//    }
 }

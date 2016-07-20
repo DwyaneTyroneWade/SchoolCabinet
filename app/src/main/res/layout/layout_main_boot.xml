@@ -28,7 +28,8 @@
     <LinearLayout
         android:id="@+id/ll_no_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
         android:layout_below="@+id/tv_notice"
         android:layout_marginTop="10dp"
         android:gravity="center"
@@ -42,7 +43,7 @@
             android:padding="10dp"
             android:text="@string/open_box"
             android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="120sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,5 +82,7 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:layout_below="@+id/ll_operation" />-->
 
-    <include layout="@layout/layout_bottom" />
+    <include
+        android:id="@+id/bottom"
+        layout="@layout/layout_bottom" />
 </RelativeLayout>

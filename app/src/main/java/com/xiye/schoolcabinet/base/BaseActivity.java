@@ -27,6 +27,7 @@ import com.xiye.sclibrary.loading.LoadingDialog;
 import com.xiye.sclibrary.net.volley.BaseResultBean;
 import com.xiye.sclibrary.net.volley.WillCancelDelegate;
 import com.xiye.sclibrary.utils.ToastHelper;
+import com.xiye.sclibrary.utils.Tools;
 
 
 public abstract class BaseActivity extends FragmentActivity {
@@ -49,7 +50,14 @@ public abstract class BaseActivity extends FragmentActivity {
         return mQueue;
     }
 
+    /**
+     * 4.4 api19以上，才能完全隐藏，低于4.4会出现按一次出现navigation bar,再按一次屏幕才能获取焦点
+     */
     public void hideNavigationBar() {
+        if (android.os.Build.VERSION.SDK_INT < 19) {
+            return;
+        }
+
         int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -63,12 +71,16 @@ public abstract class BaseActivity extends FragmentActivity {
             // number directly for higher API target
             // level
         } else {
+            //TODO useless code
             uiFlags |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
         }
 
         getWindow().getDecorView().setSystemUiVisibility(uiFlags);
     }
 
+    /**
+     * 右上角时钟
+     */
     protected void initClock() {
 //        ClockHelper.getInstance().setTextView(
 //                (TextView) findViewById(R.id.tv_date),
@@ -77,6 +89,19 @@ public abstract class BaseActivity extends FragmentActivity {
         ClockHelper.getInstance().setTvCalendar((TextView) findViewById(R.id.tv_calendar));
         ClockHelper.getInstance().upCalendar();
     }
+
+    /**
+     * 设置TOP的班级信息
+     *
+     * @param classInfoStr
+     */
+    protected void setClassInfo(String classInfoStr) {
+        TextView tvClassInfo = (TextView) findViewById(R.id.tv_class_info);
+        if (tvClassInfo != null && !Tools.isStringEmpty(classInfoStr)) {
+            tvClassInfo.setText(classInfoStr);
+        }
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle arg0) {

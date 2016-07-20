@@ -17,6 +17,7 @@ import com.xiye.sclibrary.utils.Tools;
 
 
 /**
+ * TODO setEnable false 的时候 应该隐藏X...true的时候，如果有内容，应该显示X
  * Created by xqq on 2016/4/22.
  */
 public class DeleteableEditText extends EditText {
@@ -36,25 +37,25 @@ public class DeleteableEditText extends EditText {
 
     public DeleteableEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        parseAttribute(context,attrs);
+        parseAttribute(context, attrs);
         init(context);
     }
 
     public DeleteableEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        parseAttribute(context,attrs);
+        parseAttribute(context, attrs);
         init(context);
     }
 
-    private void parseAttribute(Context context, AttributeSet attrs){
+    private void parseAttribute(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DeleteableEditText);
         mDeleteDrawable = ta.getDrawable(R.styleable.DeleteableEditText_deleteDrawable);
     }
 
     private void init(Context context) {
-        setPadding(0,0, Tools.dip2px(context,10),0);
-        setCompoundDrawablePadding(Tools.dip2px(context,10));
-        if (mDeleteDrawable == null){
+        setPadding(0, 0, Tools.dip2px(context, 10), 0);
+        setCompoundDrawablePadding(Tools.dip2px(context, 10));
+        if (mDeleteDrawable == null) {
             mDeleteDrawable = context.getResources().getDrawable(R.drawable.ic_edit_del_normal);
         }
         mEmptyDrawable = createEmptyDrawable();
@@ -78,7 +79,7 @@ public class DeleteableEditText extends EditText {
         setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
+                if (hasFocus) {
                     setDrawable();
                 } else {
                     setCompoundDrawablesWithIntrinsicBounds(null, null, mEmptyDrawable, null);
@@ -87,8 +88,8 @@ public class DeleteableEditText extends EditText {
         });
     }
 
-    private void setDrawable(){
-        if (length() > 0 && isFocused()){
+    private void setDrawable() {
+        if (length() > 0 && isFocused()) {
             setCompoundDrawablesWithIntrinsicBounds(null, null, mDeleteDrawable, null);
             state = STATE_SHOW_DELETE;
         } else {
@@ -97,27 +98,27 @@ public class DeleteableEditText extends EditText {
         }
     }
 
-    private Drawable createEmptyDrawable(){
+    private Drawable createEmptyDrawable() {
         int width = mDeleteDrawable.getIntrinsicWidth();
         int height = mDeleteDrawable.getIntrinsicHeight();
-        if (width == -1 || height == -1){
+        if (width == -1 || height == -1) {
             return null;
         }
         Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         return new BitmapDrawable(bmp);
     }
 
-    private boolean isClickDelete(){
+    private boolean isClickDelete() {
         int vH = getHeight();
         int vW = getWidth();
-        int padding = Tools.dip2px(getContext(),10);
-        int clickBorder = Tools.dip2px(getContext(),5);
+        int padding = Tools.dip2px(getContext(), 10);
+        int clickBorder = Tools.dip2px(getContext(), 5);
         int dH = mDeleteDrawable.getIntrinsicHeight();
         int dW = mDeleteDrawable.getIntrinsicWidth();
-        if (mUpY > ((vH - dH)/2 - clickBorder)
-                && mUpY < ((vH + dH)/2 + clickBorder)
+        if (mUpY > ((vH - dH) / 2 - clickBorder)
+                && mUpY < ((vH + dH) / 2 + clickBorder)
                 && mUpX > (vW - padding - dW - clickBorder)
-                && mUpX < (vW - padding + clickBorder)){
+                && mUpX < (vW - padding + clickBorder)) {
             setText("");
             return true;
         }
@@ -127,14 +128,14 @@ public class DeleteableEditText extends EditText {
     @Override
     public boolean performClick() {
         boolean isClickDelete = isClickDelete();
-        if (isClickDelete){
+        if (isClickDelete) {
             return true;
         } else {
             return super.performClick();
         }
     }
 
-    public void setDeleteDrawable(Drawable drawable){
+    public void setDeleteDrawable(Drawable drawable) {
         mDeleteDrawable = drawable;
         mEmptyDrawable = createEmptyDrawable();
         setDrawable();
@@ -142,7 +143,7 @@ public class DeleteableEditText extends EditText {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP){
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             mUpX = (int) event.getX();
             mUpY = (int) event.getY();
         }

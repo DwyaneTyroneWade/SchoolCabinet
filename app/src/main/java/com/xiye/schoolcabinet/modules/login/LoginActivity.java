@@ -88,7 +88,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private void checkAccount() {
         String account = etAccount.getText().toString();
         String pwd = etPwd.getText().toString();
-        mDelegate.checkAccount(account, pwd);
+        mDelegate.checkAccount(account, pwd, loginType);
     }
 
     @Override
@@ -116,6 +116,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case STUDENT:
                 //TODO 开箱，记录开箱数据
+                mDelegate.openBox();
                 this.finish();
                 break;
         }

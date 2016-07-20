@@ -8,8 +8,9 @@
     <string name="account">账号</string>
     <string name="password">密码</string>
     <string name="copy_right">Copyright©%1$s  51xiye.com</string>
-    <string name="account_necessray">请输入账号</string>
-    <string name="pwd_necessray">请输入密码</string>
+    <string name="account_necessary">请输入账号</string>
+    <string name="student_number_necessary">请输入学号</string>
+    <string name="pwd_necessary">请输入密码</string>
     <string name="cabinet_id_verify">学生柜ID号验证</string>
     <string name="cabinet_id">学生柜ID号</string>
     <string name="open_single_box">开单个学生柜</string>
@@ -20,4 +21,10 @@
     <string name="status_confirm">状态，确定</string>
     <string name="no_card">无卡操作</string>
     <string name="open_box">开箱</string>
+    <string name="card_id_null">卡号为空</string>
+    <string name="card_id_invalid">卡号无效</string>
+    <string name="cabinet_id_necessary">请输入学生柜ID号</string>
+    <string name="verify_cabinet_id_suc">验证成功</string>
+    <string name="verify_cabinet_id_fail">验证失败</string>
+    <string name="verify_ing">验证中&#8230;</string>
 </resources>
