@@ -1,9 +1,10 @@
 package com.xiye.schoolcabinet.manager.serialport;
 
+import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.manager.NeedleManager;
-import com.xiye.sclibrary.base.Env;
 import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.utils.SerialDataSendHelper;
+import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
 
 import java.io.OutputStream;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
  */
 public class BoxActionManager {
     private OutputStream mOutputStreamLock;
+    private String boxType;
 
     private BoxActionManager() {
 
@@ -32,7 +34,12 @@ public class BoxActionManager {
      * @param boxId 箱子编号
      */
     public void readRay(String boxId) {
-        sendCommand(obtainCommand(boxId, LockActionType.RAY));
+        getBoxType();
+        if (boxType.contains("B")) {
+            sendCommand(obtainCommandForBoxTypeB(boxId, LockActionType.RAY));
+        } else if (boxType.contains("A")) {
+            sendCommand(obtainCommandForBoxTypeA(boxId, LockActionType.RAY));
+        }
     }
 
     /**
@@ -41,7 +48,12 @@ public class BoxActionManager {
      * @param boxId
      */
     public void readLockStatus(String boxId) {
-        sendCommand(obtainCommand(boxId, LockActionType.READ));
+        getBoxType();
+        if (boxType.contains("B")) {
+            sendCommand(obtainCommandForBoxTypeB(boxId, LockActionType.READ));
+        } else if (boxType.contains("A")) {
+            sendCommand(obtainCommandForBoxTypeA(boxId, LockActionType.READ));
+        }
     }
 
     /**
@@ -50,10 +62,21 @@ public class BoxActionManager {
      * @param boxId
      */
     public void openLock(String boxId) {
-        if (Env.DEMO) {
-            sendCommand(obtainCommandForDemo(boxId, LockActionType.OPEN));
-        } else {
-            sendCommand(obtainCommand(boxId, LockActionType.OPEN));
+        getBoxType();
+
+        if (boxType.contains("B")) {
+            sendCommand(obtainCommandForBoxTypeB(boxId, LockActionType.OPEN));
+        } else if (boxType.contains("A")) {
+            sendCommand(obtainCommandForBoxTypeA(boxId, LockActionType.OPEN));
+        }
+    }
+
+    private void getBoxType() {
+        if (Tools.isStringEmpty(boxType)) {
+            boxType = ConfigManager.getBoxType();
+            if (Tools.isStringEmpty(boxType)) {
+                boxType = "AF";
+            }
         }
     }
 
@@ -62,7 +85,7 @@ public class BoxActionManager {
      *
      * @return
      */
-    private byte[] obtainCommandForDemo(String boxId, LockActionType actionType) {
+    private byte[] obtainCommandForBoxTypeB(String boxId, LockActionType actionType) {
         byte[] b = new byte[6];
         int boxIdInt = Integer.valueOf(boxId);
         //10-16
@@ -102,7 +125,7 @@ public class BoxActionManager {
         return b;
     }
 
-    private byte[] obtainCommand(String boxId, LockActionType actionType) {
+    private byte[] obtainCommandForBoxTypeA(String boxId, LockActionType actionType) {
         //TODO <=14个子柜子，每个子柜4个箱子
         byte[] b = new byte[6];
         int boxIdInt = Integer.valueOf(boxId);

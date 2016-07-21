@@ -78,6 +78,15 @@ public class ConfigManager {
         CacheManager.setCache(CacheManager.CACHE_KEY_CABINET_ID, cabinetId);
     }
 
+    public static String getBoxType() {
+        CardInfoBean bean = getCardInfoFromDB();
+        if (bean != null && bean.results != null) {
+            return bean.results.boxtype;
+        } else {
+            return "";
+        }
+    }
+
     public interface GetAllCardInfoCallBack extends BaseCallBackListener {
         void onGetDataSuc(CardInfoBean bean);
     }
