@@ -27,4 +27,8 @@
     <string name="verify_cabinet_id_suc">验证成功</string>
     <string name="verify_cabinet_id_fail">验证失败</string>
     <string name="verify_ing">验证中&#8230;</string>
+    <string name="teacher">老师</string>
+    <string name="student">学生</string>
+    <string name="admin">管理员</string>
+    <string name="help">帮助</string>
 </resources>

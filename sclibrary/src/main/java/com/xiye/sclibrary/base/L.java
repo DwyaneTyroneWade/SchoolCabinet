@@ -15,7 +15,6 @@ import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.xiye.sclibrary.net.needle.Needle;
-//import com.ifchange.lib.async.PoolAsyncTask;
 
 public class L {
 

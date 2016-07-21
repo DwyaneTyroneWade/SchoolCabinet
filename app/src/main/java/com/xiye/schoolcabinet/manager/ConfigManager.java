@@ -33,6 +33,10 @@ public class ConfigManager {
                 if (bean != null && bean.err_no == ServerConstants.SUCCESS_CODE) {
                     ConfigManager.setCabinetId(cabinetId);
                     saveCardInfoToDB(bean);
+                    //download bg
+                    if (bean.results != null) {
+                        MainBackgroundImageManager.download(bean.results.url);
+                    }
                     if (callBack != null) {
                         callBack.onGetDataSuc(bean);
                     }

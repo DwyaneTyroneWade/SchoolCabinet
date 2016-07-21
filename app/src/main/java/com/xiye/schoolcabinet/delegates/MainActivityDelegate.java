@@ -1,5 +1,6 @@
 package com.xiye.schoolcabinet.delegates;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -14,6 +15,7 @@ import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.beans.RemoteBean;
 import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.schoolcabinet.manager.ConfigManager;
+import com.xiye.schoolcabinet.manager.MainBackgroundImageManager;
 import com.xiye.schoolcabinet.manager.serialport.BoxActionManager;
 import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
 import com.xiye.schoolcabinet.utils.ActivityStack;
@@ -209,6 +211,17 @@ public class MainActivityDelegate {
         }
 
         return cardInfo;
+    }
+
+    public Drawable getBg() {
+        String url = MainBackgroundImageManager.getUrl();
+        if (MainBackgroundImageManager.isMainBgExisted(url)) {
+            String path = MainBackgroundImageManager.getMainBgFilePath(url);
+            Drawable d = Drawable.createFromPath(path);
+            return d;
+        } else {
+            return null;
+        }
     }
 
 //    private void doAction(String cardId) {

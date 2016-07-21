@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.delegates.MainActivityDelegate;
@@ -38,6 +40,7 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     };
     private MainActivityDelegate mDelegate;
     private ImageView logo;
+    private RelativeLayout rlBg;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -115,7 +118,8 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         findViewById(R.id.save).setOnClickListener(this);
         logo = (ImageView) findViewById(R.id.logo);
         logo.setOnLongClickListener(this);
-        findViewById(R.id.btn_no_card).setOnClickListener(this);
+        rlBg = (RelativeLayout) findViewById(R.id.main_bg);
+//        findViewById(R.id.btn_no_card).setOnClickListener(this);
     }
 
     @Override
@@ -171,8 +175,12 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
 //                });
 //                DialogFactory.showDialog(dialog2);
 //                break;
-            case R.id.btn_no_card:
-                dealWithNoCardClick();
+            case R.id.btn_no_card_teacher:
+            case R.id.btn_no_card_admin:
+                dealWithNoCardClick(SCConstants.LoginType.ADMIN);
+                break;
+            case R.id.btn_no_card_student:
+                dealWithNoCardClick(SCConstants.LoginType.STUDENT);
                 break;
             default:
                 break;
@@ -211,9 +219,9 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
 //        ActivityDispatcher.goLogin(this, extras);
 //    }
 
-    private void dealWithNoCardClick() {
+    private void dealWithNoCardClick(SCConstants.LoginType type) {
         Bundle extras = new Bundle();
-        extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.STUDENT);
+        extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, type);
         ActivityDispatcher.goLogin(this, extras);
     }
 
@@ -234,6 +242,13 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     }
 
     private void fillData(CardInfoBean bean) {
+        if (rlBg.getBackground() == null) {
+            Drawable d = mDelegate.getBg();
+            if (d != null) {
+                rlBg.setBackgroundDrawable(d);
+            }
+        }
+
         if (bean.results != null) {
             String school = bean.results.school;
             String classname = bean.results.className;

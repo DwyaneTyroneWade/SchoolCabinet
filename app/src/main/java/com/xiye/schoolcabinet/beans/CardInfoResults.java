@@ -11,4 +11,5 @@ public class CardInfoResults implements Serializable{
     public String school;
     public String className;
     public String total;
+    public String url;
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp">
@@ -36,14 +37,55 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <Button
-            android:id="@+id/btn_no_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@string/open_box"
-            android:textColor="@color/text_color_black"
-            android:textSize="120sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_no_card_teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/text_color_blue"
+                android:padding="10dp"
+                android:text="@string/teacher"
+                android:textColor="@color/text_color_white"
+                android:textSize="120sp" />
+
+            <Button
+                android:id="@+id/btn_no_card_student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/btn_no_card_teacher"
+                android:background="@color/text_color_blue"
+                android:padding="10dp"
+                android:text="@string/student"
+                android:textColor="@color/text_color_white"
+                android:textSize="120sp" />
+
+            <Button
+                android:id="@+id/btn_no_card_admin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_no_card_teacher"
+                android:background="@color/text_color_blue"
+                android:padding="10dp"
+                android:text="@string/admin"
+                android:textColor="@color/text_color_white"
+                android:textSize="120sp" />
+
+            <Button
+                android:id="@+id/btn_no_card_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_no_card_teacher"
+                android:layout_toRightOf="@+id/btn_no_card_admin"
+                android:background="@color/text_color_blue"
+                android:padding="10dp"
+                android:text="@string/help"
+                android:textColor="@color/text_color_white"
+                android:textSize="120sp" />
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

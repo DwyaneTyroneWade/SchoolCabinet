@@ -18,7 +18,8 @@ public class CacheManager {
 
 
     public static final String CACHE_KEY_CARD_INFO_BEAN = "card_info_bean";
-    public static final String CACHE_KEY_CABINET_ID= "cabinet_id";
+    public static final String CACHE_KEY_CABINET_ID = "cabinet_id";
+    public static final String CACHE_KEY_MAIN_BG_URL = "main_bg_url";
 
 
     public static void setCache(String key, String value) {

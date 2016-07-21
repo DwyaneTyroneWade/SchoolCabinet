@@ -8,5 +8,5 @@ import java.io.Serializable;
 public class Box implements Serializable{
     public String box_id;
     public String status;
-    public boolean isFilled;
+    public String isFilled;
 }
