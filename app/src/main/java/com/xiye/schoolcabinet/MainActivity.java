@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.delegates.MainActivityDelegate;
@@ -21,7 +22,7 @@ import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
 
-public class MainActivity extends SerialPortActivity implements View.OnClickListener, View.OnLongClickListener, ConfigManager.GetAllCardInfoCallBack {
+public class MainActivity extends SerialPortActivity implements View.OnClickListener, View.OnLongClickListener, MainActivityDelegate.RemoteFromBackstageCallback, ConfigManager.GetAllCardInfoCallBack {
     public final static int MESSAGE_ON_IC_OUTSIDE_DATA_RECEIVED = 1;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -41,6 +42,7 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     private MainActivityDelegate mDelegate;
     private ImageView logo;
     private RelativeLayout rlBg;
+    private TextView tvNotice;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -82,7 +84,7 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
 //        setContentView(R.layout.activity_main);
         L.d("sw:" + Tools.getScreenWidth(this));
         L.d("sh:" + Tools.getScreenHeight(this));
-        mDelegate = new MainActivityDelegate(this, mOutputStreamLock);
+        mDelegate = new MainActivityDelegate(this, mOutputStreamLock, this);
 //        getExtras();
         initView();
 //        registerReceiver();
@@ -119,6 +121,7 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         logo = (ImageView) findViewById(R.id.logo);
         logo.setOnLongClickListener(this);
         rlBg = (RelativeLayout) findViewById(R.id.main_bg);
+        tvNotice = (TextView) findViewById(R.id.tv_notice);
 //        findViewById(R.id.btn_no_card).setOnClickListener(this);
     }
 
@@ -256,6 +259,17 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
             builder.append(school);
             builder.append(classname);
             setClassInfo(builder.toString());
+        }
+    }
+
+    @Override
+    public void onNotice(String notice) {
+        if (tvNotice != null) {
+            if (Tools.isStringEmpty(notice)) {
+                tvNotice.setText("");
+            } else {
+                tvNotice.setText(notice);
+            }
         }
     }
 }

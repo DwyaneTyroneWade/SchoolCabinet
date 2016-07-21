@@ -40,6 +40,8 @@ public class MainActivityDelegate {
     private OutputStream mOutputStreamLock;
     private boolean hasGoVerifyId = false;//TODO 保证只有在从系统运行app（关闭-->开启）的时候直接进入管理员界面
 
+    private RemoteFromBackstageCallback remoteFromBackstageCallback;
+
     //    public OperationType getType() {
 //        return type;
 //    }
@@ -67,7 +69,7 @@ public class MainActivityDelegate {
      * @param activity         不能为空
      * @param outputStreamLock 不能为空
      */
-    public MainActivityDelegate(BaseActivity activity, OutputStream outputStreamLock) {
+    public MainActivityDelegate(BaseActivity activity, OutputStream outputStreamLock, RemoteFromBackstageCallback remoteFromBackstageCallback) {
         if (activity == null) {
             throw new NullPointerException("activity null forbidden");
         }
@@ -77,6 +79,7 @@ public class MainActivityDelegate {
         }
         this.activity = activity;
         this.mOutputStreamLock = outputStreamLock;
+        this.remoteFromBackstageCallback = remoteFromBackstageCallback;
         BoxActionManager.getInstance().setOutputStreamLock(this.mOutputStreamLock);
     }
 
@@ -127,12 +130,20 @@ public class MainActivityDelegate {
             @Override
             public void onResponse(RemoteBean remoteBean) {
                 if (remoteBean != null) {
+                    //notice
+                    String notice = remoteBean.notice;
+                    if (remoteFromBackstageCallback != null) {
+                        remoteFromBackstageCallback.onNotice(notice);
+                    }
+
                     String boxId = remoteBean.results;
                     L.d(TAG, "boxIdfake:" + boxId);
                     String cabinetId = ConfigManager.getCabinetId();
                     boxId = StringUtils.getRealBoxId(boxId, cabinetId);
                     L.d(TAG, "boxId:" + boxId);
-                    BoxLogicManager.openBox(boxId);
+                    if (!"00".equals(boxId)) {
+                        BoxLogicManager.openBox(boxId);
+                    }
                     //TODO 如果服务端不能在1s内完成修改，那么此时，应该停止对远程开箱接口的请求，等到开箱结束之后（这个开箱结束，怎么定义，如果定义为读取状态的话，有可能读取的时候，箱子又被关上了），给服务器发送远程开箱成功的通知，等待服务器返回修改成功的消息后，再开启对远程开箱接口的请求的轮询
                 }
             }
@@ -222,6 +233,10 @@ public class MainActivityDelegate {
         } else {
             return null;
         }
+    }
+
+    public interface RemoteFromBackstageCallback {
+        void onNotice(String notice);
     }
 
 //    private void doAction(String cardId) {
