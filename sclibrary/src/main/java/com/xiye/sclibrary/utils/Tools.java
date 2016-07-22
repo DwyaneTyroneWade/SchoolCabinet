@@ -3,6 +3,8 @@ package com.xiye.sclibrary.utils;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.xiye.sclibrary.base.L;
+
 public class Tools {
     public static boolean isStringEmpty(CharSequence input) {
         if (TextUtils.isEmpty(input)) {
@@ -52,5 +54,12 @@ public class Tools {
      */
     public static int getScreenHeight(Context context) {
         return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public static void LogDpi(Context context) {
+        int densityDpi = context.getResources().getDisplayMetrics().densityDpi;
+        float density = context.getResources().getDisplayMetrics().density;
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        L.d("DPI", "[densityDpi]:" + densityDpi + "[density]:" + density + "[scaledDensity]:" + scaledDensity);
     }
 }

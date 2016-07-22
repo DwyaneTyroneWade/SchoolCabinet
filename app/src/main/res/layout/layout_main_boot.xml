@@ -14,17 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/top"
-        android:layout_marginTop="10dp"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="center"
         android:marqueeRepeatLimit="marquee_forever"
-        android:paddingLeft="100dp"
-        android:paddingRight="100dp"
+        android:paddingLeft="150dp"
+        android:paddingRight="150dp"
         android:singleLine="true"
         android:textColor="@color/text_color_black"
-        android:textSize="@dimen/text_size_middle" />
+        android:textSize="@dimen/text_size_large" />
 
     <LinearLayout
         android:id="@+id/ll_no_card"
@@ -32,59 +31,62 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom"
         android:layout_below="@+id/tv_notice"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center">
+            android:gravity="bottom|center_horizontal"
+            android:paddingBottom="10dp">
 
             <Button
                 android:id="@+id/btn_no_card_teacher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="95dp"
                 android:background="@color/text_color_blue"
                 android:padding="10dp"
                 android:text="@string/teacher"
                 android:textColor="@color/text_color_white"
-                android:textSize="120sp" />
+                android:textSize="@dimen/text_size_middle" />
 
             <Button
                 android:id="@+id/btn_no_card_student"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="95dp"
+                android:layout_marginLeft="125dp"
                 android:layout_toRightOf="@+id/btn_no_card_teacher"
                 android:background="@color/text_color_blue"
                 android:padding="10dp"
                 android:text="@string/student"
                 android:textColor="@color/text_color_white"
-                android:textSize="120sp" />
+                android:textSize="@dimen/text_size_middle" />
 
             <Button
                 android:id="@+id/btn_no_card_admin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="95dp"
                 android:layout_below="@+id/btn_no_card_teacher"
+                android:layout_marginTop="33dp"
                 android:background="@color/text_color_blue"
                 android:padding="10dp"
                 android:text="@string/admin"
                 android:textColor="@color/text_color_white"
-                android:textSize="120sp" />
+                android:textSize="@dimen/text_size_middle" />
 
             <Button
                 android:id="@+id/btn_no_card_help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="95dp"
                 android:layout_below="@+id/btn_no_card_teacher"
+                android:layout_marginLeft="125dp"
+                android:layout_marginTop="33dp"
                 android:layout_toRightOf="@+id/btn_no_card_admin"
                 android:background="@color/text_color_blue"
                 android:padding="10dp"
                 android:text="@string/help"
                 android:textColor="@color/text_color_white"
-                android:textSize="120sp" />
+                android:textSize="@dimen/text_size_middle" />
         </RelativeLayout>
     </LinearLayout>
 

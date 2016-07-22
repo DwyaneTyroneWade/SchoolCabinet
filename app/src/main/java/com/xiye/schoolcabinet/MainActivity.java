@@ -85,6 +85,8 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
 //        setContentView(R.layout.activity_main);
         L.d("sw:" + Tools.getScreenWidth(this));
         L.d("sh:" + Tools.getScreenHeight(this));
+        Tools.LogDpi(this);
+        //1024*600 dpi 1.0 Medium density (160), mdpi
         mDelegate = new MainActivityDelegate(this, mOutputStreamLock, this);
 //        getExtras();
         initView();
