@@ -2,7 +2,6 @@ package com.xiye.schoolcabinet.manager.serialport;
 
 import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.manager.NeedleManager;
-import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.utils.SerialDataSendHelper;
 import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
@@ -75,6 +74,7 @@ public class BoxActionManager {
         if (Tools.isStringEmpty(boxType)) {
             boxType = ConfigManager.getBoxType();
             if (Tools.isStringEmpty(boxType)) {
+                //default 固定箱 4*N
                 boxType = "AF";
             }
         }
@@ -114,9 +114,9 @@ public class BoxActionManager {
 
         if (sum > 255) {
             b[4] = (byte) (sum >> 8);
-            L.d("high:" + TypeUtil.byteToInt(b[4]));
+//            L.d("high:" + TypeUtil.byteToInt(b[4]));
             b[5] = (byte) ((sum << 8) >> 8);
-            L.d("low:" + TypeUtil.byteToInt(b[5]));
+//            L.d("low:" + TypeUtil.byteToInt(b[5]));
         } else {
             b[4] = (byte) 0x00;
             b[5] = TypeUtil.intToByte(sum);
@@ -220,9 +220,9 @@ public class BoxActionManager {
 
         if (sum > 255) {
             b[4] = (byte) (sum >> 8);
-            L.d("high:" + TypeUtil.byteToInt(b[4]));
+//            L.d("high:" + TypeUtil.byteToInt(b[4]));
             b[5] = (byte) ((sum << 8) >> 8);
-            L.d("low:" + TypeUtil.byteToInt(b[5]));
+//            L.d("low:" + TypeUtil.byteToInt(b[5]));
         } else {
             b[4] = (byte) 0x00;
             b[5] = TypeUtil.intToByte(sum);

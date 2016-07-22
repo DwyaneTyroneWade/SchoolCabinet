@@ -17,6 +17,7 @@ import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.delegates.MainActivityDelegate;
 import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.schoolcabinet.manager.ConfigManager;
+import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
 import com.xiye.schoolcabinet.utils.SCConstants;
 import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.utils.Tools;
@@ -140,7 +141,7 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
 //        L.wtf("wtf", "onLockDataReceived hexStr:" + TypeUtil.bytesToHex(Tools.getRealBuffer(buffer, size)));
         L.d("onLockDataReceived hexStr:" + TypeUtil.bytesToHex(Tools.getRealBuffer(buffer, size)));
         //TODO
-
+        BoxLogicManager.onSerialPortBack(buffer, size);
     }
 
     @Override

@@ -27,11 +27,17 @@ public class StringUtils {
      */
     public static String getRealBoxId(String boxIdFake, String cabinetId) {
         String boxId = "";
+
         if (Tools.isStringEmpty(cabinetId) || Tools.isStringEmpty(boxIdFake)) {
             return boxId;
         }
+        //判断是不是这个柜子要远程开箱
+        String cabinetCheck = boxIdFake.substring(0, cabinetId.length());
 
-        boxId = boxIdFake.substring(cabinetId.length(), boxIdFake.length());
+        if (cabinetId.equals(cabinetCheck)) {
+            boxId = boxIdFake.substring(cabinetId.length(), boxIdFake.length());
+        }
+
         return boxId;
     }
 

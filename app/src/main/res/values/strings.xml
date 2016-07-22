@@ -31,4 +31,6 @@
     <string name="student">学生</string>
     <string name="admin">管理员</string>
     <string name="help">帮助</string>
+    <string name="open_lock_suc">打开箱门(%d)成功</string>
+    <string name="open_lock_fail">打开箱门(%d)失败，请联系管理员</string>
 </resources>

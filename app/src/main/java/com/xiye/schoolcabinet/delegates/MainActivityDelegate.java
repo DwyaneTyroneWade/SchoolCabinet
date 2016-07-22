@@ -38,7 +38,7 @@ public class MainActivityDelegate {
     //    private OperationType type;
     private BaseActivity activity;
     private OutputStream mOutputStreamLock;
-    private boolean hasGoVerifyId = false;//TODO 保证只有在从系统运行app（关闭-->开启）的时候直接进入管理员界面
+    private boolean hasGoVerifyId = false;//保证只有在从系统运行app（关闭-->开启）的时候直接进入管理员界面
 
     private RemoteFromBackstageCallback remoteFromBackstageCallback;
 
@@ -107,7 +107,6 @@ public class MainActivityDelegate {
      * 开始轮询远程开箱
      */
     public void startGetRemoteFromBackStage() {
-        //TODO 每1s,去获取远程开箱的指令一次,后台应该注意，只发送一次，这样的指令，即1s之内完成指令的修改（或者当前端远程开箱之后，通知后台已经开箱了,另外，远程开箱 本地应该上传柜子的编号，确认是哪个柜子需要远程开箱）
         pauseRemote = false;
         mHandler.post(remoteRunnable);
     }
@@ -141,10 +140,9 @@ public class MainActivityDelegate {
                     String cabinetId = ConfigManager.getCabinetId();
                     boxId = StringUtils.getRealBoxId(boxId, cabinetId);
                     L.d(TAG, "boxId:" + boxId);
-                    if (!"00".equals(boxId)) {
+                    if (!"00".equals(boxId) && !Tools.isStringEmpty(boxId)) {
                         BoxLogicManager.openBox(boxId);
                     }
-                    //TODO 如果服务端不能在1s内完成修改，那么此时，应该停止对远程开箱接口的请求，等到开箱结束之后（这个开箱结束，怎么定义，如果定义为读取状态的话，有可能读取的时候，箱子又被关上了），给服务器发送远程开箱成功的通知，等待服务器返回修改成功的消息后，再开启对远程开箱接口的请求的轮询
                 }
             }
         }, new Response.ErrorListener() {

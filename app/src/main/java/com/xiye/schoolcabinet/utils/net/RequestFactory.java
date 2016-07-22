@@ -36,4 +36,6 @@ public class RequestFactory {
         GsonRequest<RemoteBean> request = GsonRequest.newGsonGetRequest(url, listener, errorListener, SCUtils.getDefaultHeaders(), RemoteBean.class);
         return request;
     }
+
+
 }
