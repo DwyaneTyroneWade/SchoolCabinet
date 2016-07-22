@@ -119,13 +119,14 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     }
 
     private void initView() {
-        findViewById(R.id.get).setOnClickListener(this);
-        findViewById(R.id.save).setOnClickListener(this);
+        findViewById(R.id.btn_no_card_teacher).setOnClickListener(this);
+        findViewById(R.id.btn_no_card_student).setOnClickListener(this);
+        findViewById(R.id.btn_no_card_admin).setOnClickListener(this);
+        findViewById(R.id.btn_no_card_help).setOnClickListener(this);
         logo = (ImageView) findViewById(R.id.logo);
         logo.setOnLongClickListener(this);
         rlBg = (RelativeLayout) findViewById(R.id.main_bg);
         tvNotice = (TextView) findViewById(R.id.tv_notice);
-//        findViewById(R.id.btn_no_card).setOnClickListener(this);
     }
 
     @Override
@@ -149,38 +150,6 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.get:
-//                dealWithGetClick();
-//                mDelegate.setType(MainActivityDelegate.OperationType.GET);
-//                AlertDialog dialog = DialogFactory.getTipDialog(this, "请刷卡取物", new DialogFactory.OnTwoButtonClickListener() {
-//                    @Override
-//                    public void btnOkOnClicklistener() {
-//                        mDelegate.setType(null);
-//                    }
-//
-//                    @Override
-//                    public void btnCancleOnClicklistener() {
-//
-//                    }
-//                });
-//                DialogFactory.showDialog(dialog);
-//                break;
-//            case R.id.save:
-//                mDelegate.setType(MainActivityDelegate.OperationType.SAVE);
-//                AlertDialog dialog2 = DialogFactory.getTipDialog(this, "请刷卡存物", new DialogFactory.OnTwoButtonClickListener() {
-//
-//                    @Override
-//                    public void btnOkOnClicklistener() {
-//                        mDelegate.setType(null);
-//                    }
-//
-//                    @Override
-//                    public void btnCancleOnClicklistener() {
-//
-//                    }
-//                });
-//                DialogFactory.showDialog(dialog2);
-//                break;
             case R.id.btn_no_card_teacher:
             case R.id.btn_no_card_admin:
                 dealWithNoCardClick(SCConstants.LoginType.ADMIN);
@@ -210,20 +179,6 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         }
         return false;
     }
-
-//    private void dealWithGetClick() {
-//        Bundle extras = new Bundle();
-//        extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.STUDENT);
-//        extras.putSerializable(SCConstants.BUNDLE_KEY_OPERATION_TYPE, MainActivityDelegate.OperationType.GET);
-//        ActivityDispatcher.goLogin(this, extras);
-//    }
-//
-//    private void dealWithSaveClick() {
-//        Bundle extras = new Bundle();
-//        extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.STUDENT);
-//        extras.putSerializable(SCConstants.BUNDLE_KEY_OPERATION_TYPE, MainActivityDelegate.OperationType.SAVE);
-//        ActivityDispatcher.goLogin(this, extras);
-//    }
 
     private void dealWithNoCardClick(SCConstants.LoginType type) {
         Bundle extras = new Bundle();

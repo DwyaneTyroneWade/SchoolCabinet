@@ -44,7 +44,7 @@
                 android:id="@+id/btn_no_card_teacher"
                 android:layout_width="250dp"
                 android:layout_height="95dp"
-                android:background="@color/text_color_blue"
+                android:background="@drawable/button_selector"
                 android:gravity="center"
                 android:text="@string/teacher"
                 android:textColor="@color/text_color_white"
@@ -56,7 +56,7 @@
                 android:layout_height="95dp"
                 android:layout_marginLeft="125dp"
                 android:layout_toRightOf="@+id/btn_no_card_teacher"
-                android:background="@color/text_color_blue"
+                android:background="@drawable/button_selector"
                 android:gravity="center"
                 android:text="@string/student"
                 android:textColor="@color/text_color_white"
@@ -68,7 +68,7 @@
                 android:layout_height="95dp"
                 android:layout_below="@+id/btn_no_card_teacher"
                 android:layout_marginTop="33dp"
-                android:background="@color/text_color_blue"
+                android:background="@drawable/button_selector"
                 android:gravity="center"
                 android:text="@string/admin"
                 android:textColor="@color/text_color_white"
@@ -82,49 +82,13 @@
                 android:layout_marginLeft="125dp"
                 android:layout_marginTop="33dp"
                 android:layout_toRightOf="@+id/btn_no_card_admin"
-                android:background="@color/text_color_blue"
+                android:background="@drawable/button_selector"
                 android:gravity="center"
                 android:text="@string/help"
                 android:textColor="@color/text_color_white"
                 android:textSize="@dimen/text_size_middle" />
         </RelativeLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_operation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_notice"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="100dp"
-            android:padding="10dp"
-            android:text="存"
-            android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_large" />
-
-        <Button
-            android:id="@+id/get"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="取"
-            android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_large" />
-    </LinearLayout>
-
-    <!--<include-->
-    <!--layout="@layout/layout_login_edit_item"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/ll_operation" />-->
 
     <include
         android:id="@+id/bottom"
