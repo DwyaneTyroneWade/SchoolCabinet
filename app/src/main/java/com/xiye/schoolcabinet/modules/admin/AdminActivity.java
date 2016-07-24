@@ -20,8 +20,7 @@ import com.xiye.sclibrary.utils.Tools;
  */
 public class AdminActivity extends BaseActivity implements View.OnClickListener, AdminActivityDelegate.AdminActivityCallBack, ConfigManager.GetAllCardInfoCallBack {
     private AdminActivityDelegate mDelegate;
-    //    private AdminAction adminAction;
-//    BroadcastReceiver receiver = new BroadcastReceiver() {
+    //    BroadcastReceiver receiver = new BroadcastReceiver() {
 //
 //        @Override
 //        public void onReceive(Context context, Intent intent) {
@@ -42,7 +41,6 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
 //        }
 //    };
     private String adminId;
-//    private TextView tvID;
 
     private Button btnBack, btnVerifyId, btnOpenAll, btnStatus, btnSingle;
     private EditText etVerifyId, etStudentOrBoxId;
@@ -113,44 +111,28 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
             etVerifyId.setText(cabinetId);
             etVerifyId.setEnabled(false);
             btnVerifyId.setEnabled(false);
+            btnVerifyId.setVisibility(View.GONE);
         }
     }
-
-
-//    private void initView() {
-//        findViewById(R.id.register).setOnClickListener(this);
-//        findViewById(R.id.open).setOnClickListener(this);
-//
-//        tvID = (TextView) findViewById(R.id.admin_id);
-//        if (!Tools.isStringEmpty(adminId)) {
-//            tvID.setText(adminId);
-//        }
-//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.register:
-//                adminAction = AdminAction.REGISTER;
-//                AlertDialog dialog = DialogFactory.getTipDialog(this, "请刷卡注册");
-//                DialogFactory.showDialog(dialog);
-//                break;
-//            case R.id.open:
-//                break;
             case R.id.btn_back:
                 this.finish();
                 break;
             case R.id.btn_open_all:
-                //TODO
+                mDelegate.openAllLock();
                 break;
             case R.id.btn_open_single_box:
-                //TODO
+                String studentOrBoxId = etStudentOrBoxId.getText().toString();
+                mDelegate.openSingleLock(studentOrBoxId);
                 break;
             case R.id.btn_verify_id:
-                //TODO
                 mDelegate.verifyId(etVerifyId.getText().toString(), this);
                 break;
             case R.id.btn_status_confirm:
+                //TODO
                 break;
             default:
                 break;
@@ -178,18 +160,6 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
     private void updateUI() {
         etVerifyId.setEnabled(false);
         btnVerifyId.setEnabled(false);
+        btnVerifyId.setVisibility(View.GONE);
     }
-
-//    @Override
-//    public void onRegisterSuc() {
-//        adminAction = null;
-//        AlertDialog dialog = DialogFactory.getTipDialog(this, "注册成功");
-//        DialogFactory.showDialog(dialog);
-//    }
-
-
-//    private enum AdminAction {
-//        REGISTER,
-//        OPEN,
-//    }
 }

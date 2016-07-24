@@ -4,6 +4,7 @@ import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.database.manager.CardTableManager;
 import com.xiye.schoolcabinet.manager.ConfigManager;
+import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 
@@ -39,55 +40,32 @@ public class AdminActivityDelegate {
         ConfigManager.getAllCardInfo(cabinetId, activity, callBack);
     }
 
-//    public void register(final String cardId) {
-//        Needle.onBackgroundThread().serially().withTaskType(LibConstants.NEEDLE_TYPE_DATABASE).execute(new UiRelatedTask<Card>() {
-//            @Override
-//            protected Card doWork() {
-//                dbManager = new CardTableManager();
-//                ArrayList<Card> list = dbManager.get();
-//                Card card = isCardIdExist(cardId, list);
-//                if (card == null) {
-//                    card = new Card();
-//                    card.cardId = cardId;
-//                    card.cabinetId = String.valueOf(CacheManager.loadIntCache(CacheManager.CACHE_KEY_CABINET_ID_ALREADY) + 1);
-//                    boolean isUpdate = dbManager.saveBoolean(card);
-//                    if (!isUpdate) {
-//                        CacheManager.setIntCache(CacheManager.CACHE_KEY_CABINET_ID_ALREADY, Integer.valueOf(card.cabinetId));
-//                    }
-//                }
-//                ArrayList<Card> listDB = dbManager.get();
-//                DBManager.getInstance().setList(listDB);
-//                for (int i = 0; i < listDB.size(); i++) {
-//                    L.d("cardid:" + listDB.get(i).cardId);
-//                    L.d("cabinetid:" + listDB.get(i).cabinetId);
-//                }
-//                return card;
-//            }
-//
-//            @Override
-//            protected void thenDoUiRelatedWork(Card card) {
-//                if (callBack != null) {
-//                    callBack.onRegisterSuc();
-//                }
-//            }
-//        });
-//    }
-//
-//    private Card isCardIdExist(String cardId, ArrayList<Card> list) {
-//        Card card = null;
-//        if (list != null && list.size() > 0) {
-//            for (int i = 0; i < list.size(); i++) {
-//                if (list.get(i).cardId.equals(cardId)) {
-//                    card = list.get(i);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        return card;
-//    }
+    public void openAllLock() {
+        int boxTotal = ConfigManager.getBoxTotal();
+        if (boxTotal > 0) {
+            for (int i = 1; i <= boxTotal; i++) {
+                BoxLogicManager.openBox(String.valueOf(i));
+            }
+        } else {
+            ToastHelper.showShortToast(activity.getString(R.string.server_data_unusual));
+        }
+    }
+
+    public void openSingleLock(String studentOrBoxId) {
+        //TODO 暂时只能开柜子号，学号与柜子号的联系未知
+        if (Tools.isStringEmpty(studentOrBoxId)) {
+            ToastHelper.showShortToast(R.string.open_single_box_id_necessary);
+        } else {
+            int boxId = Integer.parseInt(studentOrBoxId);
+            int boxTotal = ConfigManager.getBoxTotal();
+            if (boxId > boxTotal) {
+                ToastHelper.showShortToast(R.string.open_single_box_id_real);
+            } else {
+                BoxLogicManager.openBox(studentOrBoxId);
+            }
+        }
+    }
 
     public interface AdminActivityCallBack {
-//        void onRegisterSuc();
     }
 }

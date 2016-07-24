@@ -40,4 +40,7 @@
     <string name="open_lock_fail">打开箱门(%d)失败，请联系管理员</string>
     <string name="countdown">倒计时</string>
     <string name="new_password_hint">如需要更改密码，请输入6位新密码</string>
+    <string name="server_data_unusual">服务器数据异常</string>
+    <string name="open_single_box_id_necessary">请输入学号或者柜子号,不能为空</string>
+    <string name="open_single_box_id_real">请输入正确的学号或者柜子号</string>
 </resources>

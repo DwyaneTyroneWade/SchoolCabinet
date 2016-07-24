@@ -161,6 +161,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@+id/btn_open_single_box"
                     android:layout_toRightOf="@id/tv_student_or_box_number"
+                    android:hint="暂时只能处理正确的柜子号，不能处理学号"
                     android:imeOptions="flagNoFullscreen|flagNoExtractUi"
                     android:inputType="number" />
 

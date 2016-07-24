@@ -101,6 +101,20 @@ public class ConfigManager {
         }
     }
 
+    public static int getBoxTotal() {
+        CardInfoBean bean = getCardInfoFromDB();
+        if (bean != null && bean.results != null) {
+            String boxTotal = bean.results.boxtotal;
+            if (Tools.isStringEmpty(boxTotal)) {
+                return 0;
+            } else {
+                return Integer.parseInt(boxTotal.trim());
+            }
+        } else {
+            return 0;
+        }
+    }
+
     public interface GetAllCardInfoCallBack extends BaseCallBackListener {
         void onGetDataSuc(CardInfoBean bean);
     }
