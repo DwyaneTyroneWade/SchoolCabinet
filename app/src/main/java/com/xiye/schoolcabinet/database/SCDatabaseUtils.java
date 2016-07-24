@@ -121,6 +121,8 @@ public class SCDatabaseUtils {
         values.put(SCTables.RecordTable.CARDID, record.cardId);
         values.put(SCTables.RecordTable.CABINETID, record.cabinetId);
         values.put(SCTables.RecordTable.BOXID, record.boxId);
+        values.put(SCTables.RecordTable.BOX_DOOR_STATUS, record.boxDoorStatus);
+        values.put(SCTables.RecordTable.BOX_IS_FILLED, record.boxIsFilled);
         values.put(SCTables.RecordTable.OPERATION_TIME, record.operationTime);
 
         return values;
@@ -139,6 +141,8 @@ public class SCDatabaseUtils {
             record.cardId = c.getString(c.getColumnIndex(SCTables.RecordTable.CARDID));
             record.cabinetId = c.getString(c.getColumnIndex(SCTables.RecordTable.CABINETID));
             record.boxId = c.getString(c.getColumnIndex(SCTables.RecordTable.BOXID));
+            record.boxDoorStatus = c.getString(c.getColumnIndex(SCTables.RecordTable.BOX_DOOR_STATUS));
+            record.boxIsFilled = c.getString(c.getColumnIndex(SCTables.RecordTable.BOX_IS_FILLED));
             record.operationTime = c.getString(c.getColumnIndex(SCTables.RecordTable.OPERATION_TIME));
 
             recordsArr.add(record);

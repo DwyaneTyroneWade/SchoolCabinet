@@ -7,5 +7,7 @@ public class Record {
     public String cardId;
     public String cabinetId;
     public String boxId;
+    public String boxDoorStatus;
+    public String boxIsFilled;
     public String operationTime;
 }
