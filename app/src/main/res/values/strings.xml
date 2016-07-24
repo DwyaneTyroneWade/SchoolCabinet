@@ -7,10 +7,14 @@
     <string name="student_number">学号</string>
     <string name="account">账号</string>
     <string name="password">密码</string>
+    <string name="new_password">新密码</string>
     <string name="copy_right">Copyright©%1$s  51xiye.com</string>
     <string name="account_necessary">请输入账号</string>
     <string name="student_number_necessary">请输入学号</string>
     <string name="pwd_necessary">请输入密码</string>
+    <string name="pwd_rule">密码必须是6位数字</string>
+    <string name="new_pwd_rule">新密码必须是6位数字</string>
+    <string name="new_pwd_equal_old">新密码与原密码相同，确认修改？</string>
     <string name="cabinet_id_verify">学生柜ID号验证</string>
     <string name="cabinet_id">学生柜ID号</string>
     <string name="open_single_box">开单个学生柜</string>
@@ -35,4 +39,5 @@
     <string name="open_lock_suc">打开箱门(%d)成功</string>
     <string name="open_lock_fail">打开箱门(%d)失败，请联系管理员</string>
     <string name="countdown">倒计时</string>
+    <string name="new_password_hint">如需要更改密码，请输入6位新密码</string>
 </resources>

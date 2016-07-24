@@ -16,6 +16,24 @@ public class Tools {
         return false;
     }
 
+    /**
+     * 判断一个字符串是不是纯数字
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        for (int i = str.length(); --i >= 0; ) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static int dip2px(Context context, float dip) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dip * scale + 0.5f);

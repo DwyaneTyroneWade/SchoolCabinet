@@ -23,7 +23,7 @@ import com.xiye.sclibrary.widget.edittext.DeleteableEditText;
 public class LoginActivity extends BaseActivity implements View.OnFocusChangeListener, DelayTimerWithRunnable.OnTimeRunnableListener, View.OnClickListener, LoginActivityDelegate.LoginCallBack, DelayTimerWithRunnable.OnTimeToFinishActivityListener {
     private SCConstants.LoginType loginType;
     private TextView tvEditTitle, tvAccount, tvCD;
-    private DeleteableEditText etAccount, etPwd;
+    private DeleteableEditText etAccount, etPwd, etNewPwd;
     private Button btnConfirm, btnBack;
 
     private LoginActivityDelegate mDelegate;
@@ -80,6 +80,7 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
         tvAccount = (TextView) findViewById(R.id.tv_account);
         etAccount = (DeleteableEditText) findViewById(R.id.et_account);
         etPwd = (DeleteableEditText) findViewById(R.id.et_pwd);
+        etNewPwd = (DeleteableEditText) findViewById(R.id.et_new_pwd);
         btnConfirm = (Button) findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(this);
         btnBack = (Button) findViewById(R.id.btn_back);
@@ -88,8 +89,10 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
         tvCD = (TextView) findViewById(R.id.tv_cd);
         etAccount.addTextChangedListener(mTextWatcher);
         etPwd.addTextChangedListener(mTextWatcher);
+        etNewPwd.addTextChangedListener(mTextWatcher);
         etAccount.setOnFocusChangeListener(this);
         etPwd.setOnFocusChangeListener(this);
+        etNewPwd.setOnFocusChangeListener(this);
 
         switch (loginType) {
             case STUDENT:
@@ -132,7 +135,8 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
     private void checkAccount() {
         String account = etAccount.getText().toString();
         String pwd = etPwd.getText().toString();
-        mDelegate.checkAccount(account, pwd, loginType);
+        String newPwd = etNewPwd.getText().toString();
+        mDelegate.checkAccount(account, pwd, newPwd, loginType);
     }
 
     @Override
@@ -155,7 +159,7 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
             case ADMIN:
             case TEACHER:
             default:
-                //TODO
+                //TODO 记录
                 ActivityDispatcher.goAdmin(this, null);
                 this.finish();
                 break;
