@@ -47,7 +47,7 @@ public class AdminActivityDelegate {
                 BoxLogicManager.openBox(String.valueOf(i));
             }
         } else {
-            ToastHelper.showShortToast(activity.getString(R.string.server_data_unusual));
+            ToastHelper.showShortToast(R.string.server_data_unusual);
         }
     }
 
@@ -58,6 +58,12 @@ public class AdminActivityDelegate {
         } else {
             int boxId = Integer.parseInt(studentOrBoxId);
             int boxTotal = ConfigManager.getBoxTotal();
+
+            if (boxTotal == 0) {
+                ToastHelper.showShortToast(R.string.server_data_unusual);
+                return;
+            }
+
             if (boxId > boxTotal) {
                 ToastHelper.showShortToast(R.string.open_single_box_id_real);
             } else {
