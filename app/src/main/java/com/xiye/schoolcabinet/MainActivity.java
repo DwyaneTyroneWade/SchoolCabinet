@@ -157,6 +157,8 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
             case R.id.btn_no_card_student:
                 dealWithNoCardClick(SCConstants.LoginType.STUDENT);
                 break;
+            case R.id.btn_no_card_help:
+                ActivityDispatcher.goHelp(this);
             default:
                 break;
         }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.xiye.schoolcabinet.MainActivity;
 import com.xiye.schoolcabinet.modules.admin.AdminActivity;
+import com.xiye.schoolcabinet.modules.help.HelpActivity;
 import com.xiye.schoolcabinet.modules.login.LoginActivity;
 
 /**
@@ -37,5 +38,10 @@ public class ActivityDispatcher {
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
+    }
+
+    public static void goHelp(Context context) {
+        Intent goHelp = new Intent(context, HelpActivity.class);
+        context.startActivity(goHelp);
     }
 }

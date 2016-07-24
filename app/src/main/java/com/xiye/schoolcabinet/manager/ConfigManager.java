@@ -87,6 +87,20 @@ public class ConfigManager {
         }
     }
 
+    public static String getClassName() {
+        CardInfoBean bean = getCardInfoFromDB();
+        if (bean != null && bean.results != null) {
+            String school = bean.results.school;
+            String classname = bean.results.className;
+            StringBuilder builder = new StringBuilder();
+            builder.append(school);
+            builder.append(classname);
+            return builder.toString();
+        } else {
+            return "";
+        }
+    }
+
     public interface GetAllCardInfoCallBack extends BaseCallBackListener {
         void onGetDataSuc(CardInfoBean bean);
     }

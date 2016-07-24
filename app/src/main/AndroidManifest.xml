@@ -38,6 +38,10 @@
             android:screenOrientation="landscape" />
 
         <activity
+            android:name=".modules.help.HelpActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape" />
 
