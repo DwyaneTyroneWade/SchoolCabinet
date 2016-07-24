@@ -16,7 +16,7 @@ import com.xiye.sclibrary.utils.TypeUtil;
 public class BoxLogicManager {
     public static final String TAG = BoxLogicManager.class.getSimpleName();
 
-    private static final long DELAY_TIME = 300;
+    private static final long DELAY_TIME = 600;
     private static final long DELAY_TIME_CHECK = 60 * 1000;//60s
 
     private static final int MSG_OPEN_LOCK_FAIL = 0;
@@ -81,7 +81,9 @@ public class BoxLogicManager {
                 sendReadLockStatusCommand(boxId, ReadPurpose.CHECK_OPEN);
             }
         }, DELAY_TIME * 3);
-
+        //TODO 读锁超时，或者 读不到 应有的结果
+        //TODO 增加LOADING
+        //TODO 每次间隔1S
     }
 
     public static void onSerialPortBack(byte[] buffer, int size) {
@@ -164,5 +166,15 @@ public class BoxLogicManager {
 
     public enum ReadPurpose {
         CHECK_OPEN, CHECK_CLOSE,
+    }
+
+    public interface OnOpenLockListener {
+        void onOpenStart();
+
+        void onOpenSuc();
+
+        void onOpenFail();
+
+        void onOpenEnd();
     }
 }

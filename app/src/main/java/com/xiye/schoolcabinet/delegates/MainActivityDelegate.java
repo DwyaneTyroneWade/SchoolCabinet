@@ -178,7 +178,7 @@ public class MainActivityDelegate {
             return;
         }
 
-        if ("管理员".equals(cardInfo.identity)) {
+        if (!"学生".equals(cardInfo.identity)) {
             Bundle extras = new Bundle();
             //TODO cardInfo 传过去
             extras.putString(SCConstants.BUNDLE_KEY_CARD_ID, str);
