@@ -33,7 +33,7 @@ import android_serialport_api.SerialPort;
 
 public abstract class SerialPortActivity extends BaseActivity {
 
-    //	private final int SERIAL_PORT_TYPE_IC_INSIDE = 0;
+    private final int SERIAL_PORT_TYPE_IC_INSIDE = 0;
     private final int SERIAL_PORT_TYPE_IC_OUTSIDE = 1;
     private final int SERIAL_PORT_TYPE_LOCK = 2;
 
@@ -42,23 +42,24 @@ public abstract class SerialPortActivity extends BaseActivity {
     /*---------------- IC OUT----start---------------*/
     protected SerialPort mSerialPortICOutSide;
     protected OutputStream mOutputStreamICOutSide;
-    /*----------------- LOCK ----start---------------*/
-    protected SerialPort mSerialPortLock;
+    private InputStream mInputStreamICOutSide;
     /*---------------- IC OUT ----end---------------*/
 
-	/*----------------- IC  IN ----start---------------*/
-//	protected SerialPort mSerialPortICInside;
-//	protected OutputStream mOutputStreamICInside;
-//	private InputStream mInputStreamICInside;
-	/*----------------- IC  IN ----end---------------*/
+    /*----------------- IC  IN ----start---------------*/
+    protected SerialPort mSerialPortICInside;
+    protected OutputStream mOutputStreamICInside;
+    private InputStream mInputStreamICInside;
+    /*----------------- IC  IN ----end---------------*/
+
+    /*----------------- LOCK ----start---------------*/
+    protected SerialPort mSerialPortLock;
     protected OutputStream mOutputStreamLock;
-    private InputStream mInputStreamICOutSide;
     private InputStream mInputStreamLock;
-	/*----------------  LOCK -----end--------------*/
+    /*----------------  LOCK -----end--------------*/
 
 
     private Thread thread_ic_outside;
-    //	private Thread thread_ic_inside;
+    private Thread thread_ic_inside;
     private Thread thread_lock;
 
     @Override
@@ -87,7 +88,7 @@ public abstract class SerialPortActivity extends BaseActivity {
 
     protected abstract void onICOutsideDataReceived(final byte[] buffer, final int size);
 
-//	protected abstract void onICInsideDataReceived(final byte[] buffer, final int size);
+    protected abstract void onICInsideDataReceived(final byte[] buffer, final int size);
 
     protected abstract void onLockDataReceived(final byte[] buffer, final int size);
 
@@ -99,9 +100,9 @@ public abstract class SerialPortActivity extends BaseActivity {
         if (thread_ic_outside != null) {
             thread_ic_outside.interrupt();
         }
-//		if (thread_ic_inside != null) {
-//            thread_ic_inside.interrupt();
-//		}
+		if (thread_ic_inside != null) {
+            thread_ic_inside.interrupt();
+		}
         if (thread_lock != null) {
             thread_lock.interrupt();
         }
@@ -121,8 +122,8 @@ public abstract class SerialPortActivity extends BaseActivity {
         thread_ic_outside = getThread(mInputStreamICOutSide, SERIAL_PORT_TYPE_IC_OUTSIDE);
         thread_ic_outside.start();
 
-//        thread_ic_inside = getThread(mInputStreamICInside, SERIAL_PORT_TYPE_IC_INSIDE);
-//        thread_ic_inside.start();
+        thread_ic_inside = getThread(mInputStreamICInside, SERIAL_PORT_TYPE_IC_INSIDE);
+        thread_ic_inside.start();
 
         thread_lock = getThread(mInputStreamLock, SERIAL_PORT_TYPE_LOCK);
         thread_lock.start();
@@ -158,9 +159,9 @@ public abstract class SerialPortActivity extends BaseActivity {
                 case SERIAL_PORT_TYPE_IC_OUTSIDE:
                     onICOutsideDataReceived(buffer, size);
                     break;
-//			case SERIAL_PORT_TYPE_IC_INSIDE:
-//				onICInsideDataReceived(buffer, size);
-//				break;
+                case SERIAL_PORT_TYPE_IC_INSIDE:
+                    onICInsideDataReceived(buffer, size);
+                    break;
                 case SERIAL_PORT_TYPE_LOCK:
                     onLockDataReceived(buffer, size);
                     break;
@@ -174,7 +175,7 @@ public abstract class SerialPortActivity extends BaseActivity {
     private void initSerial() throws InvalidParameterException,
             SecurityException, IOException {
         initSerialPortICOutside();
-//		initSerialPortICInSide();
+		initSerialPortICInSide();
         initSerialPortLock();
     }
 
@@ -182,23 +183,23 @@ public abstract class SerialPortActivity extends BaseActivity {
             SecurityException, IOException {
 //        mSerialPortICOutSide = mApplication.getSerialPort(0, "/dev/ttySAC0", 9600);
         //TODO
-        mSerialPortICOutSide = mApplication.getSerialPort(0, "/dev/ttySAC3", 9600);
+        mSerialPortICOutSide = mApplication.getSerialPort(0, "/dev/ttyS1", 9600);
         mOutputStreamICOutSide = mSerialPortICOutSide.getOutputStream();
         mInputStreamICOutSide = mSerialPortICOutSide.getInputStream();
     }
 
-//    protected void initSerialPortICInSide() throws InvalidParameterException,
-//            SecurityException, IOException {
-//        //TODO
-//        mSerialPortICInside = mApplication.getSerialPort(0, "", 9600);
-//        mOutputStreamICInside = mSerialPortICInside.getOutputStream();
-//        mInputStreamICInside = mSerialPortICInside.getInputStream();
-//    }
+    protected void initSerialPortICInSide() throws InvalidParameterException,
+            SecurityException, IOException {
+        //TODO
+        mSerialPortICInside = mApplication.getSerialPort(0, "/dev/ttyS2", 9600);
+        mOutputStreamICInside = mSerialPortICInside.getOutputStream();
+        mInputStreamICInside = mSerialPortICInside.getInputStream();
+    }
 
     protected void initSerialPortLock() throws InvalidParameterException,
             SecurityException, IOException {
         //TODO
-        mSerialPortLock = mApplication.getSerialPort(0, "/dev/ttyUSB0", 9600);
+        mSerialPortLock = mApplication.getSerialPort(0, "/dev/ttyS4", 9600);
         mOutputStreamLock = mSerialPortLock.getOutputStream();
         mInputStreamLock = mSerialPortLock.getInputStream();
     }
@@ -213,8 +214,8 @@ public abstract class SerialPortActivity extends BaseActivity {
         mApplication.closeSerialPort(mSerialPortICOutSide);
         mSerialPortICOutSide = null;
 
-//		mApplication.closeSerialPort(mSerialPortICInside);
-//        mSerialPortICInside = null;
+		mApplication.closeSerialPort(mSerialPortICInside);
+        mSerialPortICInside = null;
 
         mApplication.closeSerialPort(mSerialPortLock);
         mSerialPortLock = null;

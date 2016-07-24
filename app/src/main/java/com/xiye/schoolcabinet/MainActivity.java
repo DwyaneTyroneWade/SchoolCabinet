@@ -25,6 +25,8 @@ import com.xiye.sclibrary.utils.TypeUtil;
 
 public class MainActivity extends SerialPortActivity implements View.OnClickListener, View.OnLongClickListener, MainActivityDelegate.RemoteFromBackstageCallback, ConfigManager.GetAllCardInfoCallBack {
     public final static int MESSAGE_ON_IC_OUTSIDE_DATA_RECEIVED = 1;
+    public final static int MESSAGE_ON_IC_INSIDE_DATA_RECEIVED = 2;
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
         @Override
@@ -44,11 +46,13 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     private ImageView logo;
     private RelativeLayout rlBg;
     private TextView tvNotice;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_ON_IC_OUTSIDE_DATA_RECEIVED:
+                case MESSAGE_ON_IC_INSIDE_DATA_RECEIVED:
                     String str = TypeUtil.hexStr2Str((String) msg.obj);
                     mDelegate.dealWithIC(str);
                     break;
@@ -124,6 +128,16 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
         L.d("onICOutsideDataReceived hexStr:" + hexStr);
         Message msg = mHandler.obtainMessage();
         msg.what = MESSAGE_ON_IC_OUTSIDE_DATA_RECEIVED;
+        msg.obj = hexStr;
+        mHandler.sendMessage(msg);
+    }
+
+    @Override
+    protected void onICInsideDataReceived(byte[] buffer, int size) {
+        String hexStr = TypeUtil.bytesToHex(Tools.getRealBuffer(buffer, size));
+        L.d("onICInsideDataReceived hexStr:" + hexStr);
+        Message msg = mHandler.obtainMessage();
+        msg.what = MESSAGE_ON_IC_INSIDE_DATA_RECEIVED;
         msg.obj = hexStr;
         mHandler.sendMessage(msg);
     }
