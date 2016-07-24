@@ -31,7 +31,8 @@
 
         <activity
             android:name=".modules.admin.AdminActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <activity
             android:name=".modules.login.LoginActivity"

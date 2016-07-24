@@ -10,6 +10,6 @@ public class SCConstants {
 //    public static final String BUNDLE_KEY_OPERATION_TYPE = "operation_type";
 
     public enum LoginType {
-        ADMIN, STUDENT,
+        ADMIN, STUDENT, TEACHER,
     }
 }

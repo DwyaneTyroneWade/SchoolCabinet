@@ -102,6 +102,8 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
         btnStatus = (Button) findViewById(R.id.btn_status_confirm);
         btnVerifyId.setOnClickListener(this);
         btnStatus.setOnClickListener(this);
+
+        setClassInfo(ConfigManager.getClassName());
     }
 
 

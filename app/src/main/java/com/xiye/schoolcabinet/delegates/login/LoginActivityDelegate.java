@@ -27,6 +27,7 @@ public class LoginActivityDelegate {
                     ToastHelper.showShortToast(R.string.student_number_necessary);
                     break;
                 case ADMIN:
+                case TEACHER:
                 default:
                     ToastHelper.showShortToast(R.string.account_necessary);
                     break;

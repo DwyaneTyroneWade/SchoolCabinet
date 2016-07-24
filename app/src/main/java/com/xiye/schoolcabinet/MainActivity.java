@@ -151,6 +151,8 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_no_card_teacher:
+                dealWithNoCardClick(SCConstants.LoginType.TEACHER);
+                break;
             case R.id.btn_no_card_admin:
                 dealWithNoCardClick(SCConstants.LoginType.ADMIN);
                 break;

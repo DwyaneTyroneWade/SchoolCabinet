@@ -10,6 +10,7 @@ import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.delegates.login.LoginActivityDelegate;
 import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
+import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.utils.SCConstants;
 import com.xiye.sclibrary.widget.edittext.DeleteableEditText;
 
@@ -57,10 +58,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 initStudentView();
                 break;
             case ADMIN:
+            case TEACHER:
             default:
                 initAdminView();
                 break;
         }
+        setClassInfo(ConfigManager.getClassName());
     }
 
     private void initStudentView() {
@@ -109,6 +112,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private void dealWithLoginSuc() {
         switch (loginType) {
             case ADMIN:
+            case TEACHER:
             default:
                 //TODO
                 ActivityDispatcher.goAdmin(this, null);

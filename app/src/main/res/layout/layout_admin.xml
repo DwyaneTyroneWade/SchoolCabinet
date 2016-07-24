@@ -15,7 +15,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tv_verify_title"
@@ -23,12 +24,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/cabinet_id_verify"
                 android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_small" />
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_verify_title">
+                android:layout_below="@+id/tv_verify_title"
+                android:padding="20dp">
 
                 <TextView
                     android:id="@+id/tv_cabinet_id"
@@ -43,6 +46,8 @@
                     android:id="@+id/et_cabinet_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@+id/btn_verify_id"
                     android:layout_toRightOf="@id/tv_cabinet_id"
                     android:imeOptions="flagNoFullscreen|flagNoExtractUi" />
@@ -62,7 +67,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -75,13 +82,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/open_all_boxes"
                     android:textColor="@color/text_color_black"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btn_open_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_open_all"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
                     android:text="@string/open_all_confirm"
                     android:textColor="@color/text_color_black"
                     android:textSize="@dimen/text_size_small" />
@@ -98,13 +108,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/cabinet_status"
                     android:textColor="@color/text_color_black"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btn_status_confirm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_cabinet_status"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
                     android:text="@string/status_confirm"
                     android:textColor="@color/text_color_black"
                     android:textSize="@dimen/text_size_small" />
@@ -113,7 +126,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tv_open_single_box"
@@ -121,12 +135,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/open_single_box"
                 android:textColor="@color/text_color_black"
-                android:textSize="@dimen/text_size_small" />
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_open_single_box">
+                android:layout_below="@+id/tv_open_single_box"
+                android:padding="20dp">
 
                 <TextView
                     android:id="@+id/tv_student_or_box_number"
@@ -141,6 +157,8 @@
                     android:id="@+id/et_student_or_box_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@+id/btn_open_single_box"
                     android:layout_toRightOf="@id/tv_student_or_box_number"
                     android:imeOptions="flagNoFullscreen|flagNoExtractUi"
