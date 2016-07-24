@@ -34,4 +34,5 @@
     <string name="help_content">1、在首界面（开箱界面），可直接刷卡开箱\n2、点击对应角色，点击后输入账号密码登陆，可以编辑行使对应功能\n3、如上还不能开箱，请联系本班老师或学校书包柜管理员，现场或远程开箱\n4、老师可刷卡或点击对应角色登陆，选择单开，全开\n5、强制开箱：即用钥匙将底部柜锁打开，徒手向上拨动强制开锁条开箱\n6、公共教室请确认是否退箱再使用柜子，谢谢配合</string>
     <string name="open_lock_suc">打开箱门(%d)成功</string>
     <string name="open_lock_fail">打开箱门(%d)失败，请联系管理员</string>
+    <string name="countdown">倒计时</string>
 </resources>
