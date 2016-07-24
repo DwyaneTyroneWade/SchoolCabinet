@@ -50,17 +50,6 @@ public class MainActivity extends SerialPortActivity implements View.OnClickList
             switch (msg.what) {
                 case MESSAGE_ON_IC_OUTSIDE_DATA_RECEIVED:
                     String str = TypeUtil.hexStr2Str((String) msg.obj);
-//                    ToastHelper.showShortToast("卡hexStr" + (String) msg.obj);
-//                    3848297037  0994927685
-                    //TODO test code
-                    if (str.contains("384")) {
-                        str = "3848297037";
-                    } else if (str.contains("099")) {
-                        str = "0994927685";
-                    } else {
-                        break;
-                    }
-
                     mDelegate.dealWithIC(str);
                     break;
             }
