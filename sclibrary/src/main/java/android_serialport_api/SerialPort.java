@@ -43,6 +43,7 @@ public class SerialPort {
 		if (!device.canRead() || !device.canWrite()) {
 			try {
 				/* Missing read/write permission, trying to chmod the file */
+				//Runtime.getRuntime().exec 会提示需要ACCESS_SUPERUSER权限
 				Process su;
 				su = Runtime.getRuntime().exec("/system/bin/su");
 				String cmd = "chmod 666 " + device.getAbsolutePath() + "\n"

@@ -187,6 +187,7 @@ public class BoxActionManager {
 //            lockNo = boxIdInt - 4 * 13;
 //        }
 
+        //第一个字节是板子地址，如果锁号是1/2号锁就等于（柜号-1）*2+1，如果锁号是3/4号锁就等于 柜号*2
         if (lockNo == 1 || lockNo == 2) {
             b[0] = (byte) ((subCabinetNo - 1) * 2 + 1);
         } else if (lockNo == 3 || lockNo == 4) {
