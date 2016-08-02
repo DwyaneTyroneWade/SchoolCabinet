@@ -4,11 +4,15 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.xiye.schoolcabinet.R;
+import com.xiye.schoolcabinet.utils.StringUtils;
 import com.xiye.sclibrary.base.C;
 import com.xiye.sclibrary.base.L;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wushuang on 7/1/16.
@@ -23,8 +27,15 @@ public class BoxLogicManager {
     private static final int MSG_OPEN_LOCK_SUC = 1;
     private static final int MSG_CHECK_DOOR_HAS_CLOSED = 2;
     private static final int MSG_CHECK_DOOR_STILL_OPEN = 3;
+    private static final int MSG_DATA_TRANS_ERROR = 4;
+
+    private static int openTimes = 0;
 
     private static ReadPurpose mReadPurpose;
+    private static OnOpenLockListener mOnOpenLockListener;
+    private static List<String> boxIdToOpenList = new ArrayList<>();
+
+    private static boolean isProcessing = false;
     private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -34,10 +45,34 @@ public class BoxLogicManager {
             switch (msg.what) {
                 //TODO 上传至服务器
                 case MSG_OPEN_LOCK_FAIL:
-                    ToastHelper.showShortToast(C.get().getString(R.string.open_lock_fail, boxId));
+                    if (openTimes < 3) {
+                        openBox(String.valueOf(boxId));
+                    } else {
+                        openTimes = 0;
+                        ToastHelper.showShortToast(C.get().getString(R.string.open_lock_fail, boxId));
+
+                        if (mOnOpenLockListener != null) {
+                            mOnOpenLockListener.onOpenFail(String.valueOf(boxId));
+                        }
+
+                        if (mProcessListener != null) {
+                            mProcessListener.onOpenProcessEnd();
+                        }
+                    }
                     break;
                 case MSG_OPEN_LOCK_SUC:
+                    openTimes = 0;
+
+                    if (mOnOpenLockListener != null) {
+                        mOnOpenLockListener.onOpenSuc(String.valueOf(boxId));
+                    }
+
+                    if (mProcessListener != null) {
+                        mProcessListener.onOpenProcessEnd();
+                    }
+
                     ToastHelper.showShortToast(C.get().getString(R.string.open_lock_suc, boxId));
+
                     //1分钟之后，读状态
                     checkDoorClosedWith1MinDelay(String.valueOf(boxId));
                     break;
@@ -47,32 +82,96 @@ public class BoxLogicManager {
                     //1分钟之后，读状态
                     checkDoorClosedWith1MinDelay(String.valueOf(boxId));
                     break;
+                case MSG_DATA_TRANS_ERROR:
+                    openTimes = 0;
+
+                    if (mOnOpenLockListener != null) {
+                        mOnOpenLockListener.onOpenFail(String.valueOf(boxId));
+                    }
+
+                    if (mProcessListener != null) {
+                        mProcessListener.onOpenProcessEnd();
+                    }
+                    break;
             }
         }
     };
+    private static OnOpenBoxProcessListener mProcessListener = new OnOpenBoxProcessListener() {
+        @Override
+        public void onOpenProcessStart() {
+            isProcessing = true;
+        }
 
-    public static void openBox(final String boxId) {//循环3次开锁，每次延时300ms
+        @Override
+        public void onOpenProcessEnd() {
+            if (boxIdToOpenList != null && boxIdToOpenList.size() > 0) {
+                boxIdToOpenList.remove(0);
+            }
+
+            isProcessing = false;
+
+            openListTop();
+        }
+    };
+
+    public static void setmOnOpenLockListener(OnOpenLockListener onOpenLockListener) {
+        mOnOpenLockListener = onOpenLockListener;
+    }
+
+    public static void openBoxList(List<String> boxIdList) {
+        if (boxIdList != null && boxIdList.size() > 0) {
+            //check contains
+            for (String boxId : boxIdList) {
+                if (!StringUtils.isStringExistInList(boxIdToOpenList, boxId)) {
+                    boxIdToOpenList.add(boxId);
+                }
+            }
+        }
+
+        openListTop();
+    }
+
+    public static void openBoxSingle(String boxId) {
+        if (!Tools.isStringEmpty(boxId)) {
+            //check contains
+            if (!StringUtils.isStringExistInList(boxIdToOpenList, boxId)) {
+                boxIdToOpenList.add(boxId);
+            }
+        }
+
+        openListTop();
+    }
+
+    private static void openListTop() {
+        if (isProcessing) {
+            return;
+        }
+        if (boxIdToOpenList != null && boxIdToOpenList.size() > 0) {
+            openBox(boxIdToOpenList.get(0));
+        }
+    }
+
+    private static void openBox(final String boxId) {
         if (Tools.isStringEmpty(boxId)) {
             return;
         }
 
-        // 连续3次发送开锁指令，每次间隔300ms;
-        // 然后延时300ms 去读取 锁的状态：
+        //TODO 发送开锁指令
+        //延时600ms读取锁状态
         // 如果锁打开，提示 开箱成功;
-        // 如果锁关闭，提示箱子损坏，请找管理员开箱（涉及到多箱子同时开的情况，最好提示里能加上箱子编号）
+        // 如果锁关闭，重新开箱，
+        // （最多三次,三次都关闭，提示箱子损坏，请找管理员开箱（涉及到多箱子同时开的情况，最好提示里能加上箱子编号）），延时读取锁状态
         //过1分钟 去读取此箱子的状态...
 
-        for (int i = 0; i < 3; i++) {
-            if (i > 0) {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendOpenLockCommand(boxId);
-                    }
-                }, DELAY_TIME * i);
-            } else {
-                sendOpenLockCommand(boxId);
-            }
+        sendOpenLockCommand(boxId);
+        openTimes++;
+
+        if (mOnOpenLockListener != null) {
+            mOnOpenLockListener.onOpenStart(boxId);
+        }
+
+        if (mProcessListener != null) {
+            mProcessListener.onOpenProcessStart();
         }
 
         mHandler.postDelayed(new Runnable() {
@@ -80,8 +179,28 @@ public class BoxLogicManager {
             public void run() {
                 sendReadLockStatusCommand(boxId, ReadPurpose.CHECK_OPEN);
             }
-        }, DELAY_TIME * 3);
-        //TODO 读锁超时，或者 读不到 应有的结果
+        }, DELAY_TIME);
+
+//        for (int i = 0; i < 3; i++) {
+//            if (i > 0) {
+//                mHandler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        sendOpenLockCommand(boxId);
+//                    }
+//                }, DELAY_TIME * i);
+//            } else {
+//                sendOpenLockCommand(boxId);
+//            }
+//        }
+
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                sendReadLockStatusCommand(boxId, ReadPurpose.CHECK_OPEN);
+//            }
+//        }, DELAY_TIME * 3);
+        //TODO 读锁超时，或者 读不到 应有的结果：1.读状态很快，50ms以内返回，否则就是没有收到你的指令，不会返回 2.正常不会有其他返回值，除非数据传输错误
         //TODO 增加LOADING
         //TODO 每次间隔1S
     }
@@ -108,7 +227,7 @@ public class BoxLogicManager {
                             mHandler.sendMessage(obtainMMessage(MSG_CHECK_DOOR_HAS_CLOSED, boxId));
                             break;
                         case CHECK_OPEN:
-                            //提示箱子＋编号损坏，请找管理员开箱
+                            //
                             mHandler.sendMessage(obtainMMessage(MSG_OPEN_LOCK_FAIL, boxId));
                             break;
                     }
@@ -128,6 +247,10 @@ public class BoxLogicManager {
                 case 0X02://红外，没有物体
                     break;
                 case 0X03://红外，有物体
+                    break;
+                default:
+                    //数据传输错误
+                    mHandler.sendMessage(obtainMMessage(MSG_DATA_TRANS_ERROR, boxId));
                     break;
             }
         }
@@ -156,7 +279,6 @@ public class BoxLogicManager {
         }, DELAY_TIME_CHECK);
     }
 
-
     private static Message obtainMMessage(int what, Object obj) {
         Message msg = mHandler.obtainMessage();
         msg.what = what;
@@ -164,17 +286,22 @@ public class BoxLogicManager {
         return msg;
     }
 
+
     public enum ReadPurpose {
         CHECK_OPEN, CHECK_CLOSE,
     }
 
+    public interface OnOpenBoxProcessListener {
+        void onOpenProcessStart();
+
+        void onOpenProcessEnd();
+    }
+
     public interface OnOpenLockListener {
-        void onOpenStart();
+        void onOpenStart(String boxId);
 
-        void onOpenSuc();
+        void onOpenSuc(String boxId);
 
-        void onOpenFail();
-
-        void onOpenEnd();
+        void onOpenFail(String boxId);
     }
 }

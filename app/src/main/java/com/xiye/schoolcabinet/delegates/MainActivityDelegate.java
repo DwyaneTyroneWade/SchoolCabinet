@@ -20,13 +20,15 @@ import com.xiye.schoolcabinet.manager.serialport.BoxActionManager;
 import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
 import com.xiye.schoolcabinet.utils.ActivityStack;
 import com.xiye.schoolcabinet.utils.SCConstants;
+import com.xiye.schoolcabinet.utils.StringUtils;
 import com.xiye.schoolcabinet.utils.net.RequestFactory;
 import com.xiye.sclibrary.base.L;
-import com.xiye.sclibrary.utils.StringUtils;
+import com.xiye.sclibrary.utils.StringUtilsLib;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,7 +143,7 @@ public class MainActivityDelegate {
                     boxId = StringUtils.getRealBoxId(boxId, cabinetId);
                     L.d(TAG, "boxId:" + boxId);
                     if (!"00".equals(boxId) && !Tools.isStringEmpty(boxId)) {
-                        BoxLogicManager.openBox(boxId);
+                        BoxLogicManager.openBoxSingle(boxId);
                     }
                 }
             }
@@ -160,7 +162,7 @@ public class MainActivityDelegate {
      * @param str
      */
     public void dealWithIC(String str) {
-        str = StringUtils.deleteLineBreaks(str);
+        str = StringUtilsLib.deleteLineBreaks(str);
         L.d(TAG, "dealWithIC str:" + str);
         //判断CARDID,并判断身份
         if (Tools.isStringEmpty(str)) {
@@ -187,14 +189,17 @@ public class MainActivityDelegate {
             if (ActivityStack.getInstance().currentActivity() instanceof MainActivity) {
                 //TODO 开箱 学生最多2个箱子
                 List<Box> boxList = cardInfo.box;
+                List<String> boxIdList = new ArrayList<>();
                 if (boxList != null && boxList.size() > 0) {
                     for (Box box : boxList) {
                         if (box != null) {
                             String boxId = StringUtils.getRealBoxId(box.box_id, ConfigManager.getCabinetId());
-                            BoxLogicManager.openBox(boxId);
+                            boxIdList.add(boxId);
                         }
                     }
                 }
+                BoxLogicManager.openBoxList(boxIdList);
+
             } else {
                 //TODO 目前只能在主界面进行刷卡操作
 //                BroadCastDispatcher.sendOnICOutsideDataReceived(str, activity);

@@ -8,6 +8,9 @@ import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by wushuang on 6/7/16.
  */
@@ -43,9 +46,11 @@ public class AdminActivityDelegate {
     public void openAllLock() {
         int boxTotal = ConfigManager.getBoxTotal();
         if (boxTotal > 0) {
+            List<String> boxIdList = new ArrayList<>();
             for (int i = 1; i <= boxTotal; i++) {
-                BoxLogicManager.openBox(String.valueOf(i));
+                boxIdList.add(String.valueOf(i));
             }
+            BoxLogicManager.openBoxList(boxIdList);
         } else {
             ToastHelper.showShortToast(R.string.server_data_unusual);
         }
@@ -67,7 +72,7 @@ public class AdminActivityDelegate {
             if (boxId > boxTotal) {
                 ToastHelper.showShortToast(R.string.open_single_box_id_real);
             } else {
-                BoxLogicManager.openBox(studentOrBoxId);
+                BoxLogicManager.openBoxSingle(studentOrBoxId);
             }
         }
     }

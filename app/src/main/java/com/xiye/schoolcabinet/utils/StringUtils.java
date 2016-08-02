@@ -1,23 +1,13 @@
-package com.xiye.sclibrary.utils;
+package com.xiye.schoolcabinet.utils;
+
+import com.xiye.sclibrary.utils.Tools;
+
+import java.util.List;
 
 /**
- * Created by wushuang on 6/7/16.
+ * Created by wushuang on 8/2/16.
  */
 public class StringUtils {
-    /**
-     * delete /r/n
-     *
-     * @param str
-     * @return
-     */
-    public static String deleteLineBreaks(String str) {
-        if (Tools.isStringEmpty(str)) {
-            return "";
-        }
-        str = str.replace("\r\n", " ").replace("\n", " ").trim();
-        return str;
-    }
-
     /**
      * 箱子编号＝柜子编号＋箱子号
      *
@@ -41,4 +31,13 @@ public class StringUtils {
         return boxId;
     }
 
+    public static boolean isStringExistInList(List<String> list, String str) {
+        boolean isExist = false;
+        if (list != null && list.size() > 0 && !Tools.isStringEmpty(str)) {
+            if (list.contains(str)) {
+                isExist = true;
+            }
+        }
+        return isExist;
+    }
 }
