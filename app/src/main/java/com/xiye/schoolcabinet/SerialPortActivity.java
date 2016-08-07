@@ -199,7 +199,7 @@ public abstract class SerialPortActivity extends BaseActivity {
     protected void initSerialPortLock() throws InvalidParameterException,
             SecurityException, IOException {
         //TODO
-        mSerialPortLock = mApplication.getSerialPort(0, "/dev/ttyS4", 9600);
+        mSerialPortLock = mApplication.getSerialPort(0, "/dev/ttyS3", 9600);
         mOutputStreamLock = mSerialPortLock.getOutputStream();
         mInputStreamLock = mSerialPortLock.getInputStream();
     }

@@ -7,6 +7,7 @@ import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.utils.StringUtils;
 import com.xiye.sclibrary.base.C;
 import com.xiye.sclibrary.base.L;
+import com.xiye.sclibrary.timer.DelayTimer;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
@@ -28,14 +29,50 @@ public class BoxLogicManager {
     private static final int MSG_CHECK_DOOR_HAS_CLOSED = 2;
     private static final int MSG_CHECK_DOOR_STILL_OPEN = 3;
     private static final int MSG_DATA_TRANS_ERROR = 4;
+    private static final int MSG_DATA_TRANS_TIME_OUT = 5;
 
+    private static int currBoxId;
     private static int openTimes = 0;
-
     private static ReadPurpose mReadPurpose;
     private static OnOpenLockListener mOnOpenLockListener;
     private static List<String> boxIdToOpenList = new ArrayList<>();
-
     private static boolean isProcessing = false;
+
+    private static DelayTimer timeoutTimer = new DelayTimer(new DelayTimer.OnTimeToFinishActivityListener() {
+        @Override
+        public void onTimeToFinishActivity() {
+            if (isProcessing) {
+                mHandler.sendMessage(obtainMMessage(MSG_DATA_TRANS_TIME_OUT, currBoxId));
+            }
+        }
+    }, 2000);//超时时间2S
+
+    private static OnOpenBoxProcessListener mProcessListener = new OnOpenBoxProcessListener() {
+        @Override
+        public void onOpenProcessStart() {
+            timeoutTimer.startTimer();
+            isProcessing = true;
+        }
+
+        @Override
+        public void onOpenProcessRetry() {
+            timeoutTimer.cancelTimer();
+        }
+
+        @Override
+        public void onOpenProcessEnd() {
+            timeoutTimer.cancelTimer();
+
+            if (boxIdToOpenList != null && boxIdToOpenList.size() > 0) {
+                boxIdToOpenList.remove(0);
+            }
+
+            isProcessing = false;
+
+            openListTop();
+        }
+    };
+
     private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -46,6 +83,9 @@ public class BoxLogicManager {
                 //TODO 上传至服务器
                 case MSG_OPEN_LOCK_FAIL:
                     if (openTimes < 3) {
+                        if (mProcessListener != null) {
+                            mProcessListener.onOpenProcessRetry();
+                        }
                         openBox(String.valueOf(boxId));
                     } else {
                         openTimes = 0;
@@ -77,12 +117,16 @@ public class BoxLogicManager {
                     checkDoorClosedWith1MinDelay(String.valueOf(boxId));
                     break;
                 case MSG_CHECK_DOOR_HAS_CLOSED:
+                    //TODO 检测到门关上了，改变本地数据库，上传服务器
                     break;
                 case MSG_CHECK_DOOR_STILL_OPEN:
+                    //TODO 是不是应该增加一个长时间不关门报警的机制
                     //1分钟之后，读状态
                     checkDoorClosedWith1MinDelay(String.valueOf(boxId));
                     break;
                 case MSG_DATA_TRANS_ERROR:
+                case MSG_DATA_TRANS_TIME_OUT:
+                    //TODO 统一给个TOAST
                     openTimes = 0;
 
                     if (mOnOpenLockListener != null) {
@@ -94,23 +138,6 @@ public class BoxLogicManager {
                     }
                     break;
             }
-        }
-    };
-    private static OnOpenBoxProcessListener mProcessListener = new OnOpenBoxProcessListener() {
-        @Override
-        public void onOpenProcessStart() {
-            isProcessing = true;
-        }
-
-        @Override
-        public void onOpenProcessEnd() {
-            if (boxIdToOpenList != null && boxIdToOpenList.size() > 0) {
-                boxIdToOpenList.remove(0);
-            }
-
-            isProcessing = false;
-
-            openListTop();
         }
     };
 
@@ -181,6 +208,9 @@ public class BoxLogicManager {
             }
         }, DELAY_TIME);
 
+        //TIMEOUT_TIMER要用到
+        currBoxId = Integer.parseInt(boxId);
+
 //        for (int i = 0; i < 3; i++) {
 //            if (i > 0) {
 //                mHandler.postDelayed(new Runnable() {
@@ -201,6 +231,7 @@ public class BoxLogicManager {
 //            }
 //        }, DELAY_TIME * 3);
         //TODO 读锁超时，或者 读不到 应有的结果：1.读状态很快，50ms以内返回，否则就是没有收到你的指令，不会返回 2.正常不会有其他返回值，除非数据传输错误
+        //如果你传过来的数据有错误，我是不会有返回值的
         //TODO 增加LOADING
         //TODO 每次间隔1S
     }
@@ -293,6 +324,8 @@ public class BoxLogicManager {
 
     public interface OnOpenBoxProcessListener {
         void onOpenProcessStart();
+
+        void onOpenProcessRetry();
 
         void onOpenProcessEnd();
     }

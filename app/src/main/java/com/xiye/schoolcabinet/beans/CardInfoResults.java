@@ -1,5 +1,7 @@
 package com.xiye.schoolcabinet.beans;
 
+import com.xiye.sclibrary.serializable.Key;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class CardInfoResults implements Serializable {
     public String total;
     public String url;
     public String boxtype;
+    @Key(key = "boxTotal")
     public String boxtotal;
     //柜子型号 AF AR BF BR
     //A代表2路卡，B代表单路卡     对应不同的开锁指令
