@@ -3,12 +3,15 @@ package com.xiye.schoolcabinet.manager;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.xiye.schoolcabinet.base.BaseActivity;
+import com.xiye.schoolcabinet.beans.CardInfo;
 import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.utils.net.RequestFactory;
 import com.xiye.schoolcabinet.utils.net.ServerConstants;
 import com.xiye.sclibrary.listener.BaseCallBackListener;
 import com.xiye.sclibrary.net.volley.GsonRequest;
 import com.xiye.sclibrary.utils.Tools;
+
+import java.util.List;
 
 /**
  * Created by wushuang on 6/28/16.
@@ -63,8 +66,38 @@ public class ConfigManager {
     }
 
     private static void saveCardInfoToDB(CardInfoBean bean) {
-        CacheManager.setSerializableCache(CacheManager.CACHE_KEY_CARD_INFO_BEAN, bean);
+        CacheManager.setSerializableCache(CacheManager.CACHE_KEY_CARD_INFO_BEAN, setRealCardAndStudentId(bean));
     }
+
+    /**
+     * 处理card_id,"card_id": "129998899989_000003"前CARDID后STUDENTID
+     *
+     * @param bean
+     * @return
+     */
+    private static CardInfoBean setRealCardAndStudentId(CardInfoBean bean) {
+        if (bean.results != null) {
+            List<CardInfo> cardInfoList = bean.results.card_info;
+            if (cardInfoList != null && cardInfoList.size() > 0) {
+                for (int i = 0; i < cardInfoList.size(); i++) {
+                    CardInfo cardInfo = cardInfoList.get(i);
+                    if (cardInfo != null) {
+                        String card_id = cardInfo.card_id;
+                        if (!Tools.isStringEmpty(card_id)) {
+                            String[] arr = card_id.split("_");
+                            if (arr != null && arr.length == 2) {
+                                cardInfo.realCardId = arr[0];
+                                cardInfo.realStudentId = arr[1];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return bean;
+    }
+
 
     public static CardInfoBean getCardInfoFromDB() {
         return (CardInfoBean) CacheManager.loadSerializableCache(CacheManager.CACHE_KEY_CARD_INFO_BEAN);

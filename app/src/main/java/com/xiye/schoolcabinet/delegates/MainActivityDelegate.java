@@ -215,7 +215,7 @@ public class MainActivityDelegate {
             if (cardInfos != null && cardInfos.size() > 0) {
                 for (int i = 0; i < cardInfos.size(); i++) {
                     if (cardInfos.get(i) != null) {
-                        if (cardId.equals(cardInfos.get(i).card_id)) {
+                        if (cardId.equals(cardInfos.get(i).realCardId)) {
                             cardInfo = cardInfos.get(i);
                             break;
                         }
