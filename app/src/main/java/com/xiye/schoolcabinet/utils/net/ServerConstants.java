@@ -18,4 +18,7 @@ public class ServerConstants {
 
     //登录
     public static String URL_LOGIN="/SchoolChestData/schoolchest/door/getResultByPassword/";
+
+    //上传远程开箱结束
+    public static String URL_REPORT_REMOTE_END ="/SchoolChestData/schoolchest/door/postDoorData/";
 }

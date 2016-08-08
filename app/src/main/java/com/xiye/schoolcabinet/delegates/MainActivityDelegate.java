@@ -23,6 +23,7 @@ import com.xiye.schoolcabinet.utils.SCConstants;
 import com.xiye.schoolcabinet.utils.StringUtils;
 import com.xiye.schoolcabinet.utils.net.RequestFactory;
 import com.xiye.sclibrary.base.L;
+import com.xiye.sclibrary.net.volley.BaseResultBean;
 import com.xiye.sclibrary.utils.StringUtilsLib;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
@@ -37,6 +38,7 @@ import java.util.List;
 public class MainActivityDelegate {
     public static final String TAG = MainActivityDelegate.class.getSimpleName();
     private final long REMOTE_TIME = 1000;
+    private RemoteInfoCache remoteInfoCache;
     //    private OperationType type;
     private BaseActivity activity;
     private OutputStream mOutputStreamLock;
@@ -83,6 +85,7 @@ public class MainActivityDelegate {
         this.mOutputStreamLock = outputStreamLock;
         this.remoteFromBackstageCallback = remoteFromBackstageCallback;
         BoxActionManager.getInstance().setOutputStreamLock(this.mOutputStreamLock);
+        remoteInfoCache = new RemoteInfoCache();
     }
 
     /**
@@ -140,11 +143,41 @@ public class MainActivityDelegate {
                     }
 
                     String boxId = remoteBean.results;
+                    if (Tools.isStringEmpty(boxId)) {
+                        return;
+                    }
+                    if (boxId.equals(remoteInfoCache.boxId) && (System.currentTimeMillis() - remoteInfoCache.time) < 10 * 1000) {
+                        //同一个boxid,小于10S,不开箱
+                        return;
+                    } else {
+                        remoteInfoCache.boxId = boxId;
+                        remoteInfoCache.time = System.currentTimeMillis();
+                    }
+
                     L.d(TAG, "boxIdfake:" + boxId);
                     String cabinetId = ConfigManager.getCabinetId();
                     boxId = StringUtils.getRealBoxId(boxId, cabinetId);
                     L.d(TAG, "boxId:" + boxId);
+
                     if (!"00".equals(boxId) && !Tools.isStringEmpty(boxId)) {
+                        BoxLogicManager.setmOnOpenLockListener(new BoxLogicManager.OnOpenLockListener() {
+                            @Override
+                            public void onOpenStart(String boxId) {
+
+                            }
+
+                            @Override
+                            public void onOpenSuc(String boxId) {
+                                BoxLogicManager.setmOnOpenLockListener(null);
+                                //远程开箱成功，上报
+                                reportRemoteEnd(boxId);
+                            }
+
+                            @Override
+                            public void onOpenFail(String boxId) {
+                                BoxLogicManager.setmOnOpenLockListener(null);
+                            }
+                        });
                         BoxLogicManager.openBoxSingle(boxId);
                     }
                 }
@@ -153,6 +186,23 @@ public class MainActivityDelegate {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 activity.processVolleyError(volleyError);
+            }
+        }));
+    }
+
+    private void reportRemoteEnd(String boxId) {
+        if (activity == null) {
+            return;
+        }
+        activity.executeRequest(RequestFactory.getReportRemoteEndRequest(boxId, new Response.Listener<BaseResultBean>() {
+            @Override
+            public void onResponse(BaseResultBean bean) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
             }
         }));
     }
@@ -242,6 +292,11 @@ public class MainActivityDelegate {
 
     public interface RemoteFromBackstageCallback {
         void onNotice(String notice);
+    }
+
+    private class RemoteInfoCache {
+        public String boxId;
+        public long time;
     }
 
 //    private void doAction(String cardId) {

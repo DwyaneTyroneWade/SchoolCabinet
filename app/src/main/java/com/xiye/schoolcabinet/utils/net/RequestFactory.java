@@ -3,6 +3,7 @@ package com.xiye.schoolcabinet.utils.net;
 import com.android.volley.Response;
 import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.beans.RemoteBean;
+import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.utils.SCUtils;
 import com.xiye.sclibrary.net.volley.BaseResultBean;
 import com.xiye.sclibrary.net.volley.GsonRequest;
@@ -56,5 +57,13 @@ public class RequestFactory {
         GsonRequest<BaseResultBean> request = GsonRequest.newGsonGetRequest(url, listener, errorListener, SCUtils.getDefaultHeaders(), BaseResultBean.class);
         return request;
     }
+
+    public static GsonRequest<BaseResultBean> getReportRemoteEndRequest(String boxId, Response.Listener<BaseResultBean> listener, Response.ErrorListener errorListener) {
+        String cabinetAndBoxId = ConfigManager.getCabinetId() + boxId;
+        String url = ServerConstants.SERVER_URL + ServerConstants.URL_REPORT_REMOTE_END + cabinetAndBoxId;
+        GsonRequest<BaseResultBean> request = GsonRequest.newGsonGetRequest(url, listener, errorListener, SCUtils.getDefaultHeaders(), BaseResultBean.class);
+        return request;
+    }
+
 
 }
