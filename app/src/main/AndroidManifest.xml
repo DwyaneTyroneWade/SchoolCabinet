@@ -43,6 +43,10 @@
             android:screenOrientation="landscape" />
 
         <activity
+            android:name=".modules.admin.CabinetStatusActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape" />
 

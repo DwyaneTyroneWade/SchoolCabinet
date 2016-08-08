@@ -43,4 +43,12 @@
     <string name="server_data_unusual">服务器数据异常</string>
     <string name="open_single_box_id_necessary">请输入学号或者柜子号,不能为空</string>
     <string name="open_single_box_id_real">请输入正确的学号或者柜子号：输入的号码不在柜子号总数范围内</string>
+    <string name="no_data">暂无数据</string>
+    <string name="box_door_status_open">打开</string>
+    <string name="box_door_status_close">关闭</string>
+    <string name="box_door_status_damage">损坏</string>
+    <string name="card_id">卡号</string>
+    <string name="box_id">箱子号</string>
+    <string name="box_status">箱子状态</string>
+    <string name="operation_time">操作时间</string>
 </resources>

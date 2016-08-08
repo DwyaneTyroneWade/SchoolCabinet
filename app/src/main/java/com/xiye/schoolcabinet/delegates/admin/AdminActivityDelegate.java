@@ -4,6 +4,7 @@ import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.beans.BoxLogicItem;
 import com.xiye.schoolcabinet.database.manager.CardTableManager;
+import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
 import com.xiye.sclibrary.utils.ToastHelper;
@@ -83,6 +84,14 @@ public class AdminActivityDelegate {
                 BoxLogicManager.openBoxSingle(item);
             }
         }
+    }
+
+    public void checkStatus() {
+        if (activity == null) {
+            return;
+        }
+
+        ActivityDispatcher.goStatus(activity);
     }
 
     public interface AdminActivityCallBack {

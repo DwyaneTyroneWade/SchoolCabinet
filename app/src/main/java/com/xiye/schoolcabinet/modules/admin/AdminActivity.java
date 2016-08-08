@@ -159,7 +159,7 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.btn_status_confirm:
                 if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
-                    //TODO
+                    mDelegate.checkStatus();
                 } else {
                     ToastHelper.showShortToast(R.string.cabinet_id_necessary);
                 }

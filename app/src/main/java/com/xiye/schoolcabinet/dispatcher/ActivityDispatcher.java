@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.xiye.schoolcabinet.MainActivity;
+import com.xiye.schoolcabinet.modules.admin.CabinetStatusActivity;
 import com.xiye.schoolcabinet.modules.admin.AdminActivity;
 import com.xiye.schoolcabinet.modules.help.HelpActivity;
 import com.xiye.schoolcabinet.modules.login.LoginActivity;
@@ -43,5 +44,10 @@ public class ActivityDispatcher {
     public static void goHelp(Context context) {
         Intent goHelp = new Intent(context, HelpActivity.class);
         context.startActivity(goHelp);
+    }
+
+    public static void goStatus(Context context) {
+        Intent goStatus = new Intent(context, CabinetStatusActivity.class);
+        context.startActivity(goStatus);
     }
 }
