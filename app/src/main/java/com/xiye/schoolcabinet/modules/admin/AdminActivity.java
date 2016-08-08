@@ -155,11 +155,7 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_verify_id:
-                if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
-                    mDelegate.verifyId(etVerifyId.getText().toString(), this);
-                } else {
-                    ToastHelper.showShortToast(R.string.cabinet_id_necessary);
-                }
+                mDelegate.verifyId(etVerifyId.getText().toString(), this);
                 break;
             case R.id.btn_status_confirm:
                 if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
@@ -178,6 +174,8 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
         dismissLoading();
         ToastHelper.showShortToast(R.string.verify_cabinet_id_suc);
         updateUI();
+        //第一次注册完，自动返回首页
+        this.finish();
     }
 
     @Override
