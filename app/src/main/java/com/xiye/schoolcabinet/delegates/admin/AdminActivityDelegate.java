@@ -2,6 +2,7 @@ package com.xiye.schoolcabinet.delegates.admin;
 
 import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
+import com.xiye.schoolcabinet.beans.BoxLogicItem;
 import com.xiye.schoolcabinet.database.manager.CardTableManager;
 import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
@@ -43,20 +44,23 @@ public class AdminActivityDelegate {
         ConfigManager.getAllCardInfo(cabinetId, activity, callBack);
     }
 
-    public void openAllLock() {
+    public void openAllLock(String adminId) {
         int boxTotal = ConfigManager.getBoxTotal();
         if (boxTotal > 0) {
-            List<String> boxIdList = new ArrayList<>();
+            List<BoxLogicItem> boxLogicItemList = new ArrayList<>();
             for (int i = 1; i <= boxTotal; i++) {
-                boxIdList.add(String.valueOf(i));
+                BoxLogicItem boxLogicItem = new BoxLogicItem();
+                boxLogicItem.boxId = String.valueOf(i);
+                boxLogicItem.cardId = adminId;
+                boxLogicItemList.add(boxLogicItem);
             }
-            BoxLogicManager.openBoxList(boxIdList);
+            BoxLogicManager.openBoxList(boxLogicItemList);
         } else {
             ToastHelper.showShortToast(R.string.server_data_unusual);
         }
     }
 
-    public void openSingleLock(String studentOrBoxId) {
+    public void openSingleLock(String studentOrBoxId, String adminId) {
         //TODO 暂时只能开柜子号，学号与柜子号的联系未知
         if (Tools.isStringEmpty(studentOrBoxId)) {
             ToastHelper.showShortToast(R.string.open_single_box_id_necessary);
@@ -72,7 +76,11 @@ public class AdminActivityDelegate {
             if (boxId > boxTotal) {
                 ToastHelper.showShortToast(R.string.open_single_box_id_real);
             } else {
-                BoxLogicManager.openBoxSingle(studentOrBoxId);
+                BoxLogicItem item = new BoxLogicItem();
+                item.boxId = studentOrBoxId;
+                item.cardId = adminId;
+                //TODO boxID 和 cardID 都可能是两种情况
+                BoxLogicManager.openBoxSingle(item);
             }
         }
     }

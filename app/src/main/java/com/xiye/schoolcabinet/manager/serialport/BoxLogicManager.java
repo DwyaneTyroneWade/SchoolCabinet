@@ -3,11 +3,23 @@ package com.xiye.schoolcabinet.manager.serialport;
 import android.os.Handler;
 import android.os.Message;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.xiye.schoolcabinet.R;
-import com.xiye.schoolcabinet.utils.StringUtils;
+import com.xiye.schoolcabinet.base.BaseActivity;
+import com.xiye.schoolcabinet.beans.BoxLogicItem;
+import com.xiye.schoolcabinet.beans.Record;
+import com.xiye.schoolcabinet.database.manager.RecordTableManager;
+import com.xiye.schoolcabinet.manager.ConfigManager;
+import com.xiye.schoolcabinet.manager.NeedleManager;
+import com.xiye.schoolcabinet.utils.ActivityStack;
+import com.xiye.schoolcabinet.utils.net.RequestFactory;
 import com.xiye.sclibrary.base.C;
 import com.xiye.sclibrary.base.L;
+import com.xiye.sclibrary.net.needle.UiRelatedTask;
+import com.xiye.sclibrary.net.volley.BaseResultBean;
 import com.xiye.sclibrary.timer.DelayTimer;
+import com.xiye.sclibrary.utils.TimeUtils;
 import com.xiye.sclibrary.utils.ToastHelper;
 import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.utils.TypeUtil;
@@ -20,6 +32,13 @@ import java.util.List;
  */
 public class BoxLogicManager {
     public static final String TAG = BoxLogicManager.class.getSimpleName();
+    public static final int BOX_DOOR_STATUS_CLOSE = 0;
+    public static final int BOX_DOOR_STATUS_OPEN = 1;
+    public static final int BOX_DOOR_STATUS_DAMAGE = 2;
+
+    public static final int BOX_IS_FILLED_FALSE = 0;
+    public static final int BOX_IF_FILLED_TRUE = 1;
+    public static final int BOX_IS_FILLED_UNKNOW = 2;
 
     private static final long DELAY_TIME = 600;
     private static final long DELAY_TIME_CHECK = 60 * 1000;//60s
@@ -35,8 +54,81 @@ public class BoxLogicManager {
     private static int openTimes = 0;
     private static ReadPurpose mReadPurpose;
     private static OnOpenLockListener mOnOpenLockListener;
-    private static List<String> boxIdToOpenList = new ArrayList<>();
+    //    private static List<String> boxIdToOpenList = new ArrayList<>();
+    private static List<BoxLogicItem> boxLogicItemToOpenList = new ArrayList<>();
     private static boolean isProcessing = false;
+
+    private static Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            final int boxId = (int) msg.obj;
+
+            switch (msg.what) {
+                //TODO 上传至服务器
+                case MSG_OPEN_LOCK_FAIL:
+                    if (openTimes < 3) {
+                        if (mProcessListener != null) {
+                            mProcessListener.onOpenProcessRetry();
+                        }
+                        openBox(String.valueOf(boxId));
+                    } else {
+                        openTimes = 0;
+                        ToastHelper.showShortToast(C.get().getString(R.string.open_lock_fail, boxId));
+                        //TODO 检测到门坏了，改变本地数据库，上传服务器
+                        updateRecordDB(String.valueOf(boxId), getCardId(), BOX_DOOR_STATUS_DAMAGE, BOX_IS_FILLED_UNKNOW);
+
+                        if (mOnOpenLockListener != null) {
+                            mOnOpenLockListener.onOpenFail(String.valueOf(boxId));
+                        }
+
+                        if (mProcessListener != null) {
+                            mProcessListener.onOpenProcessEnd();
+                        }
+                    }
+                    break;
+                case MSG_OPEN_LOCK_SUC:
+                    openTimes = 0;
+                    ToastHelper.showShortToast(C.get().getString(R.string.open_lock_suc, boxId));
+                    //TODO 门打开，改变本地数据库，上传服务器
+                    updateRecordDB(String.valueOf(boxId), getCardId(), BOX_DOOR_STATUS_OPEN, BOX_IS_FILLED_UNKNOW);
+
+                    if (mOnOpenLockListener != null) {
+                        mOnOpenLockListener.onOpenSuc(String.valueOf(boxId));
+                    }
+
+                    if (mProcessListener != null) {
+                        mProcessListener.onOpenProcessEnd();
+                    }
+
+                    //1分钟之后，读状态
+                    checkDoorClosedWith1MinDelay(String.valueOf(boxId));
+                    break;
+                case MSG_CHECK_DOOR_HAS_CLOSED:
+                    //TODO 检测到门关上了，改变本地数据库，上传服务器
+                    updateRecordDB(String.valueOf(boxId), getCardId(), BOX_DOOR_STATUS_CLOSE, BOX_IS_FILLED_UNKNOW);
+                    break;
+                case MSG_CHECK_DOOR_STILL_OPEN:
+                    //TODO 是不是应该增加一个长时间不关门报警的机制
+                    //1分钟之后，读状态
+                    checkDoorClosedWith1MinDelay(String.valueOf(boxId));
+                    break;
+                case MSG_DATA_TRANS_ERROR:
+                case MSG_DATA_TRANS_TIME_OUT:
+                    //TODO 统一给个TOAST
+                    openTimes = 0;
+
+                    if (mOnOpenLockListener != null) {
+                        mOnOpenLockListener.onOpenFail(String.valueOf(boxId));
+                    }
+
+                    if (mProcessListener != null) {
+                        mProcessListener.onOpenProcessEnd();
+                    }
+                    break;
+            }
+        }
+    };
 
     private static DelayTimer timeoutTimer = new DelayTimer(new DelayTimer.OnTimeToFinishActivityListener() {
         @Override
@@ -63,8 +155,8 @@ public class BoxLogicManager {
         public void onOpenProcessEnd() {
             timeoutTimer.cancelTimer();
 
-            if (boxIdToOpenList != null && boxIdToOpenList.size() > 0) {
-                boxIdToOpenList.remove(0);
+            if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.size() > 0) {
+                boxLogicItemToOpenList.remove(0);
             }
 
             isProcessing = false;
@@ -73,84 +165,18 @@ public class BoxLogicManager {
         }
     };
 
-    private static Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            final int boxId = (int) msg.obj;
-
-            switch (msg.what) {
-                //TODO 上传至服务器
-                case MSG_OPEN_LOCK_FAIL:
-                    if (openTimes < 3) {
-                        if (mProcessListener != null) {
-                            mProcessListener.onOpenProcessRetry();
-                        }
-                        openBox(String.valueOf(boxId));
-                    } else {
-                        openTimes = 0;
-                        ToastHelper.showShortToast(C.get().getString(R.string.open_lock_fail, boxId));
-
-                        if (mOnOpenLockListener != null) {
-                            mOnOpenLockListener.onOpenFail(String.valueOf(boxId));
-                        }
-
-                        if (mProcessListener != null) {
-                            mProcessListener.onOpenProcessEnd();
-                        }
-                    }
-                    break;
-                case MSG_OPEN_LOCK_SUC:
-                    openTimes = 0;
-
-                    if (mOnOpenLockListener != null) {
-                        mOnOpenLockListener.onOpenSuc(String.valueOf(boxId));
-                    }
-
-                    if (mProcessListener != null) {
-                        mProcessListener.onOpenProcessEnd();
-                    }
-
-                    ToastHelper.showShortToast(C.get().getString(R.string.open_lock_suc, boxId));
-
-                    //1分钟之后，读状态
-                    checkDoorClosedWith1MinDelay(String.valueOf(boxId));
-                    break;
-                case MSG_CHECK_DOOR_HAS_CLOSED:
-                    //TODO 检测到门关上了，改变本地数据库，上传服务器
-                    break;
-                case MSG_CHECK_DOOR_STILL_OPEN:
-                    //TODO 是不是应该增加一个长时间不关门报警的机制
-                    //1分钟之后，读状态
-                    checkDoorClosedWith1MinDelay(String.valueOf(boxId));
-                    break;
-                case MSG_DATA_TRANS_ERROR:
-                case MSG_DATA_TRANS_TIME_OUT:
-                    //TODO 统一给个TOAST
-                    openTimes = 0;
-
-                    if (mOnOpenLockListener != null) {
-                        mOnOpenLockListener.onOpenFail(String.valueOf(boxId));
-                    }
-
-                    if (mProcessListener != null) {
-                        mProcessListener.onOpenProcessEnd();
-                    }
-                    break;
-            }
-        }
-    };
-
     public static void setmOnOpenLockListener(OnOpenLockListener onOpenLockListener) {
         mOnOpenLockListener = onOpenLockListener;
     }
 
-    public static void openBoxList(List<String> boxIdList) {
-        if (boxIdList != null && boxIdList.size() > 0) {
+    public static void openBoxList(List<BoxLogicItem> boxLogicItemsList) {
+        if (boxLogicItemsList != null && boxLogicItemsList.size() > 0) {
             //check contains
-            for (String boxId : boxIdList) {
-                if (!StringUtils.isStringExistInList(boxIdToOpenList, boxId)) {
-                    boxIdToOpenList.add(boxId);
+            for (BoxLogicItem item : boxLogicItemsList) {
+                if (item != null) {
+                    if (!isItemExist(boxLogicItemToOpenList, item)) {
+                        boxLogicItemToOpenList.add(item);
+                    }
                 }
             }
         }
@@ -158,11 +184,11 @@ public class BoxLogicManager {
         openListTop();
     }
 
-    public static void openBoxSingle(String boxId) {
-        if (!Tools.isStringEmpty(boxId)) {
+    public static void openBoxSingle(BoxLogicItem boxLogicItem) {
+        if (boxLogicItem != null && !Tools.isStringEmpty(boxLogicItem.boxId)) {
             //check contains
-            if (!StringUtils.isStringExistInList(boxIdToOpenList, boxId)) {
-                boxIdToOpenList.add(boxId);
+            if (!isItemExist(boxLogicItemToOpenList, boxLogicItem)) {
+                boxLogicItemToOpenList.add(boxLogicItem);
             }
         }
 
@@ -173,8 +199,8 @@ public class BoxLogicManager {
         if (isProcessing) {
             return;
         }
-        if (boxIdToOpenList != null && boxIdToOpenList.size() > 0) {
-            openBox(boxIdToOpenList.get(0));
+        if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.size() > 0 && boxLogicItemToOpenList.get(0) != null) {
+            openBox(boxLogicItemToOpenList.get(0).boxId);
         }
     }
 
@@ -317,6 +343,73 @@ public class BoxLogicManager {
         return msg;
     }
 
+    private static boolean isItemExist(List<BoxLogicItem> boxLogicItemsList, BoxLogicItem item) {
+        boolean isExist = false;
+        if (boxLogicItemsList != null && boxLogicItemsList.size() > 0 && item != null) {
+            if (boxLogicItemsList.contains(item)) {
+                isExist = true;
+            }
+        }
+        return isExist;
+    }
+
+    /**
+     * @param boxId
+     * @param cardId
+     * @param boxDoorStatus 表示格子状态，1表示打开，0表示关闭， 2表示格子损坏
+     * @param boxIsFilled   表示格子里面是否有物体，1表示有物体，0表示没有物体
+     */
+
+    private static void updateRecordDB(String boxId, String cardId, int boxDoorStatus, int boxIsFilled) {
+        //prepareRecord
+        final Record record = new Record();
+        record.cardId = cardId;
+        record.cabinetId = ConfigManager.getCabinetId();
+        record.boxId = boxId;
+        record.boxDoorStatus = String.valueOf(boxDoorStatus);
+        record.boxIsFilled = String.valueOf(boxIsFilled);
+        record.operationTime = TimeUtils.getDateTimeyyyy_MM_dd_HH_mm_ss();
+
+        NeedleManager.getBackgroundThreadExecutorForRecord().execute(new UiRelatedTask<Object>() {
+            @Override
+            protected Object doWork() {
+                RecordTableManager.save(record);
+                return null;
+            }
+
+            @Override
+            protected void thenDoUiRelatedWork(Object o) {
+                reportBoxStatusToServer(record);
+            }
+        });
+    }
+
+    private static void reportBoxStatusToServer(Record record) {
+        BaseActivity activity = (BaseActivity) ActivityStack.getInstance().currentActivity();
+        if (activity == null) {
+            return;
+        }
+
+        activity.executeRequest(RequestFactory.getReportBoxStatusRequest(record, new Response.Listener<BaseResultBean>() {
+            @Override
+            public void onResponse(BaseResultBean baseResultBean) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        }));
+    }
+
+    private static String getCardId() {
+        String cardId = "";
+        if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.get(0) != null) {
+            cardId = boxLogicItemToOpenList.get(0).cardId;
+        }
+        return cardId;
+    }
 
     public enum ReadPurpose {
         CHECK_OPEN, CHECK_CLOSE,
@@ -337,4 +430,6 @@ public class BoxLogicManager {
 
         void onOpenFail(String boxId);
     }
+
+
 }

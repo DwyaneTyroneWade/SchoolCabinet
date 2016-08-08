@@ -2,6 +2,7 @@ package com.xiye.schoolcabinet.utils.net;
 
 import com.android.volley.Response;
 import com.xiye.schoolcabinet.beans.CardInfoBean;
+import com.xiye.schoolcabinet.beans.Record;
 import com.xiye.schoolcabinet.beans.RemoteBean;
 import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.utils.SCUtils;
@@ -58,6 +59,14 @@ public class RequestFactory {
         return request;
     }
 
+    /**
+     * 上传远程开箱结束
+     *
+     * @param boxId
+     * @param listener
+     * @param errorListener
+     * @return
+     */
     public static GsonRequest<BaseResultBean> getReportRemoteEndRequest(String boxId, Response.Listener<BaseResultBean> listener, Response.ErrorListener errorListener) {
         String cabinetAndBoxId = ConfigManager.getCabinetId() + boxId;
         String url = ServerConstants.SERVER_URL + ServerConstants.URL_REPORT_REMOTE_END + cabinetAndBoxId;
@@ -65,5 +74,24 @@ public class RequestFactory {
         return request;
     }
 
-
+    /**
+     * 上传箱子状态
+     *
+     * @param record
+     * @param listener
+     * @param errorListener
+     * @return
+     */
+    //chestNo/card_id/box_id/box_status/is_filled/operation_time
+    public static GsonRequest<BaseResultBean> getReportBoxStatusRequest(Record record, Response.Listener<BaseResultBean> listener, Response.ErrorListener errorListener) {
+        String url = ServerConstants.SERVER_URL + ServerConstants.URL_REPORT_BOX_STATUS
+                + record.cabinetId + "/"
+                + record.cardId + "/"
+                + record.boxId + "/"
+                + record.boxDoorStatus + "/"
+                + record.boxIsFilled + "/"
+                + record.operationTime;
+        GsonRequest<BaseResultBean> request = GsonRequest.newGsonGetRequest(url, listener, errorListener, SCUtils.getDefaultHeaders(), BaseResultBean.class);
+        return request;
+    }
 }

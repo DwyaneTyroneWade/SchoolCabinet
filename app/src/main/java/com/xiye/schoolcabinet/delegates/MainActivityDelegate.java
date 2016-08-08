@@ -10,6 +10,7 @@ import com.xiye.schoolcabinet.MainActivity;
 import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.beans.Box;
+import com.xiye.schoolcabinet.beans.BoxLogicItem;
 import com.xiye.schoolcabinet.beans.CardInfo;
 import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.beans.RemoteBean;
@@ -178,7 +179,11 @@ public class MainActivityDelegate {
                                 BoxLogicManager.setmOnOpenLockListener(null);
                             }
                         });
-                        BoxLogicManager.openBoxSingle(boxId);
+                        BoxLogicItem item = new BoxLogicItem();
+                        item.boxId = boxId;
+                        //TODO 远程开箱没有cardid
+                        item.cardId = "remote";
+                        BoxLogicManager.openBoxSingle(item);
                     }
                 }
             }
@@ -241,16 +246,20 @@ public class MainActivityDelegate {
             if (ActivityStack.getInstance().currentActivity() instanceof MainActivity) {
                 //TODO 开箱 学生最多2个箱子
                 List<Box> boxList = cardInfo.box;
-                List<String> boxIdList = new ArrayList<>();
+                List<BoxLogicItem> boxLogicItemList = new ArrayList<>();
                 if (boxList != null && boxList.size() > 0) {
                     for (Box box : boxList) {
                         if (box != null) {
+                            String cardId = str;
                             String boxId = StringUtils.getRealBoxId(box.box_id, ConfigManager.getCabinetId());
-                            boxIdList.add(boxId);
+                            BoxLogicItem item = new BoxLogicItem();
+                            item.boxId = boxId;
+                            item.cardId = cardId;
+                            boxLogicItemList.add(item);
                         }
                     }
                 }
-                BoxLogicManager.openBoxList(boxIdList);
+                BoxLogicManager.openBoxList(boxLogicItemList);
 
             } else {
                 //TODO 目前只能在主界面进行刷卡操作

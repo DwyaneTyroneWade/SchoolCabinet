@@ -10,9 +10,14 @@ import java.util.concurrent.Executor;
  */
 public class NeedleManager {
     public static final String NEEDLE_TYPE_LOCK_ACTION = "needle_lock_action";
+    public static final String NEEDLE_TYPE_RECORD = "needle_record";
 
     public static BackgroundThreadExecutor getBackgroundThreadExecutorForLock() {
         return Needle.onBackgroundThread().serially().withTaskType(NEEDLE_TYPE_LOCK_ACTION);
+    }
+
+    public static BackgroundThreadExecutor getBackgroundThreadExecutorForRecord() {
+        return Needle.onBackgroundThread().serially().withTaskType(NEEDLE_TYPE_RECORD);
     }
 
     public static Executor getMainThreadExecutorForLock() {

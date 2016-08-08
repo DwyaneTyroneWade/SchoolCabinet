@@ -163,8 +163,11 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
             case ADMIN:
             case TEACHER:
             default:
-                //TODO 记录,交给服务器去记录，本地只记录箱子状态
-                ActivityDispatcher.goAdmin(this, null);
+                //TODO 记录,交给服务器去记录登录，本地只记录箱子状态
+                Bundle extras = new Bundle();
+                //TODO cardInfo 传过去 ,可能不是CARDID,而是学号
+                extras.putString(SCConstants.BUNDLE_KEY_CARD_ID, cardOrStudentId);
+                ActivityDispatcher.goAdmin(this, extras);
                 this.finish();
                 break;
             case STUDENT:

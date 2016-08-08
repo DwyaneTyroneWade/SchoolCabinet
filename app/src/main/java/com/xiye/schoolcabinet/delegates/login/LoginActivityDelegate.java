@@ -5,6 +5,7 @@ import com.android.volley.VolleyError;
 import com.xiye.schoolcabinet.R;
 import com.xiye.schoolcabinet.base.BaseActivity;
 import com.xiye.schoolcabinet.beans.Box;
+import com.xiye.schoolcabinet.beans.BoxLogicItem;
 import com.xiye.schoolcabinet.beans.CardInfo;
 import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.manager.serialport.BoxLogicManager;
@@ -139,16 +140,20 @@ public class LoginActivityDelegate {
 
         if (cardInfo != null) {
             List<Box> boxList = cardInfo.box;
-            List<String> boxIdList = new ArrayList<>();
+            List<BoxLogicItem> boxLogicItemList = new ArrayList<>();
             if (boxList != null && boxList.size() > 0) {
                 for (Box box : boxList) {
                     if (box != null) {
+                        String cardId = cardInfo.realCardId;
                         String boxId = StringUtils.getRealBoxId(box.box_id, ConfigManager.getCabinetId());
-                        boxIdList.add(boxId);
+                        BoxLogicItem item = new BoxLogicItem();
+                        item.cardId = cardId;
+                        item.boxId = boxId;
+                        boxLogicItemList.add(item);
                     }
                 }
             }
-            BoxLogicManager.openBoxList(boxIdList);
+            BoxLogicManager.openBoxList(boxLogicItemList);
         }
     }
 

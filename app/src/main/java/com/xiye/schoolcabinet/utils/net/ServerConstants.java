@@ -17,8 +17,11 @@ public class ServerConstants {
     public static String URL_SEND_BOX_OPERATION = "/SchoolChestData/schoolchest/record";
 
     //登录
-    public static String URL_LOGIN="/SchoolChestData/schoolchest/door/getResultByPassword/";
+    public static String URL_LOGIN = "/SchoolChestData/schoolchest/door/getResultByPassword/";
 
     //上传远程开箱结束
-    public static String URL_REPORT_REMOTE_END ="/SchoolChestData/schoolchest/door/postDoorData/";
+    public static String URL_REPORT_REMOTE_END = "/SchoolChestData/schoolchest/door/postDoorData/";
+
+    //上传箱子记录(开，关，坏)
+    public static String URL_REPORT_BOX_STATUS = "/SchoolChestData/schoolchest/door/postDataByChestNo/";
 }

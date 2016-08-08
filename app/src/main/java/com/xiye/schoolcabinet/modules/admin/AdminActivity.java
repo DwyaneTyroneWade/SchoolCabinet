@@ -80,6 +80,9 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
     private void getExtras() {
         if (getIntent() != null && getIntent().getExtras() != null) {
             adminId = getIntent().getExtras().getString(SCConstants.BUNDLE_KEY_CARD_ID);
+        } else {
+            //TODO 可能存在ADMINID为空的情况 比如第一次进入
+            adminId = "admin";
         }
     }
 
@@ -137,17 +140,33 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_open_all:
-                mDelegate.openAllLock();
+                if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
+                    mDelegate.openAllLock(adminId);
+                } else {
+                    ToastHelper.showShortToast(R.string.cabinet_id_necessary);
+                }
                 break;
             case R.id.btn_open_single_box:
-                String studentOrBoxId = etStudentOrBoxId.getText().toString();
-                mDelegate.openSingleLock(studentOrBoxId);
+                if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
+                    String studentOrBoxId = etStudentOrBoxId.getText().toString();
+                    mDelegate.openSingleLock(studentOrBoxId, adminId);
+                } else {
+                    ToastHelper.showShortToast(R.string.cabinet_id_necessary);
+                }
                 break;
             case R.id.btn_verify_id:
-                mDelegate.verifyId(etVerifyId.getText().toString(), this);
+                if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
+                    mDelegate.verifyId(etVerifyId.getText().toString(), this);
+                } else {
+                    ToastHelper.showShortToast(R.string.cabinet_id_necessary);
+                }
                 break;
             case R.id.btn_status_confirm:
-                //TODO
+                if (!Tools.isStringEmpty(ConfigManager.getCabinetId())) {
+                    //TODO
+                } else {
+                    ToastHelper.showShortToast(R.string.cabinet_id_necessary);
+                }
                 break;
             default:
                 break;
