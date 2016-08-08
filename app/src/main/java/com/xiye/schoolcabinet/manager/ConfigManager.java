@@ -148,6 +148,70 @@ public class ConfigManager {
         }
     }
 
+    public static String getRealCardIdByRealStudentId(String realStudentId) {
+        if (Tools.isStringEmpty(realStudentId)) {
+            return "";
+        }
+
+        CardInfoBean bean = getCardInfoFromDB();
+        if (bean != null && bean.results != null) {
+            List<CardInfo> cardInfoList = bean.results.card_info;
+            if (cardInfoList != null && cardInfoList.size() > 0) {
+                for (int i = 0; i < cardInfoList.size(); i++) {
+                    CardInfo cardInfo = cardInfoList.get(i);
+                    if (cardInfo != null && realStudentId.equals(cardInfo.realStudentId)) {
+                        return cardInfo.realCardId;
+                    }
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public static CardInfo getCardInfoByCardId(String cardId) {
+        if (Tools.isStringEmpty(cardId)) {
+            return null;
+        }
+
+        CardInfoBean bean = getCardInfoFromDB();
+        if (bean != null && bean.results != null) {
+            List<CardInfo> cardInfoList = bean.results.card_info;
+            if (cardInfoList != null && cardInfoList.size() > 0) {
+                for (int i = 0; i < cardInfoList.size(); i++) {
+                    CardInfo cardInfo = cardInfoList.get(i);
+                    if (cardInfo != null && cardId.equals(cardInfo.realCardId)) {
+                        return cardInfo;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static CardInfo getCardInfoByStudentId(String studentId) {
+        if (Tools.isStringEmpty(studentId)) {
+            return null;
+        }
+
+        CardInfoBean bean = getCardInfoFromDB();
+        if (bean != null && bean.results != null) {
+            List<CardInfo> cardInfoList = bean.results.card_info;
+            if (cardInfoList != null && cardInfoList.size() > 0) {
+                for (int i = 0; i < cardInfoList.size(); i++) {
+                    CardInfo cardInfo = cardInfoList.get(i);
+                    if (cardInfo != null && studentId.equals(cardInfo.realStudentId)) {
+                        return cardInfo;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     public interface GetAllCardInfoCallBack extends BaseCallBackListener {
         void onGetDataSuc(CardInfoBean bean);
     }

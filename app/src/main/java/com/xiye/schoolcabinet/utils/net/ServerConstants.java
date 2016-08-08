@@ -15,4 +15,7 @@ public class ServerConstants {
 
     //上传数据
     public static String URL_SEND_BOX_OPERATION = "/SchoolChestData/schoolchest/record";
+
+    //登录
+    public static String URL_LOGIN="/SchoolChestData/schoolchest/door/getResultByPassword/";
 }

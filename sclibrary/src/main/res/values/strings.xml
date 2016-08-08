@@ -18,4 +18,5 @@
     <string name="tip">提示</string>
 
     <string name="err_network_timeout">请求网络超时</string>
+    <string name="err_network_servererror">Sorry,ServerError</string>
 </resources>

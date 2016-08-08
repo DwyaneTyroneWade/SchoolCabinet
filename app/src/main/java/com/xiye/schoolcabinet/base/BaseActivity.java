@@ -245,6 +245,7 @@ public abstract class BaseActivity extends FragmentActivity {
                 //TODO
             } else if (error instanceof ServerError) {
                 //TODO
+                ToastHelper.showShortToast(R.string.err_network_servererror);
             } else if (error instanceof NetworkError) {
                 //TODO
             } else if (error instanceof ParseError) {

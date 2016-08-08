@@ -94,9 +94,11 @@ public class MainActivityDelegate {
         String cabinetId = ConfigManager.getCabinetId();
         if (Tools.isStringEmpty(cabinetId)) {
             if (!hasGoVerifyId) {
-                Bundle extras = new Bundle();
-                extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.ADMIN);
-                ActivityDispatcher.goLogin(activity, extras);
+//                Bundle extras = new Bundle();
+//                extras.putSerializable(SCConstants.BUNDLE_KEY_LOGIN_TYPE, SCConstants.LoginType.ADMIN);
+//                ActivityDispatcher.goLogin(activity, extras);
+                //TODO 不要账号密码
+                ActivityDispatcher.goAdmin(activity, null);
                 hasGoVerifyId = true;
             }
         } else {

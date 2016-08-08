@@ -4,7 +4,9 @@ import com.android.volley.Response;
 import com.xiye.schoolcabinet.beans.CardInfoBean;
 import com.xiye.schoolcabinet.beans.RemoteBean;
 import com.xiye.schoolcabinet.utils.SCUtils;
+import com.xiye.sclibrary.net.volley.BaseResultBean;
 import com.xiye.sclibrary.net.volley.GsonRequest;
+import com.xiye.sclibrary.utils.TimeUtils;
 
 /**
  * Created by wushuang on 6/28/16.
@@ -37,5 +39,22 @@ public class RequestFactory {
         return request;
     }
 
+    /**
+     * 登录
+     *
+     * @param chestNo
+     * @param cardId
+     * @param cardPwd
+     * @param cardNewPwd
+     * @param listener
+     * @param errorListener
+     * @return
+     */
+    public static GsonRequest<BaseResultBean> getLoginRequest(String chestNo, String cardId, String cardPwd, String cardNewPwd, Response.Listener<BaseResultBean> listener, Response.ErrorListener errorListener) {
+        String operationTime = TimeUtils.getDateTimeyyyy_MM_dd_HH_mm_ss();
+        String url = ServerConstants.SERVER_URL + ServerConstants.URL_LOGIN + chestNo + "/" + cardId + "/" + cardPwd + "/" + cardNewPwd + "/" + operationTime;
+        GsonRequest<BaseResultBean> request = GsonRequest.newGsonGetRequest(url, listener, errorListener, SCUtils.getDefaultHeaders(), BaseResultBean.class);
+        return request;
+    }
 
 }

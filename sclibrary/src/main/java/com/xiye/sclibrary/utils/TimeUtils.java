@@ -12,13 +12,20 @@ import java.util.Date;
 public class TimeUtils {
     public static String getDateTime() {
         String dateTime = "";
-        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateTime = sdf.format(new Date());
+        return dateTime;
+    }
+
+    public static String getDateTimeyyyy_MM_dd_HH_mm_ss() {
+        String dateTime = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         dateTime = sdf.format(new Date());
         return dateTime;
     }
 
     public static Date convertTimeToDate(String time) {
-        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return sdf.parse(time);
         } catch (ParseException e) {

@@ -15,6 +15,7 @@ import com.xiye.schoolcabinet.dispatcher.ActivityDispatcher;
 import com.xiye.schoolcabinet.manager.ConfigManager;
 import com.xiye.schoolcabinet.utils.SCConstants;
 import com.xiye.sclibrary.timer.DelayTimerWithRunnable;
+import com.xiye.sclibrary.utils.Tools;
 import com.xiye.sclibrary.widget.edittext.DeleteableEditText;
 
 /**
@@ -136,12 +137,15 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
         String account = etAccount.getText().toString();
         String pwd = etPwd.getText().toString();
         String newPwd = etNewPwd.getText().toString();
+        if (Tools.isStringEmpty(newPwd)) {
+            newPwd = "000000";//default 服务器会判断为不需要修改密码
+        }
         mDelegate.checkAccount(account, pwd, newPwd, loginType);
     }
 
     @Override
-    public void onLoginSuccess() {
-        dealWithLoginSuc();
+    public void onLoginSuccess(String cardOrStudentId) {
+        dealWithLoginSuc(cardOrStudentId);
     }
 
     @Override
@@ -154,18 +158,18 @@ public class LoginActivity extends BaseActivity implements View.OnFocusChangeLis
 
     }
 
-    private void dealWithLoginSuc() {
+    private void dealWithLoginSuc(String cardOrStudentId) {
         switch (loginType) {
             case ADMIN:
             case TEACHER:
             default:
-                //TODO 记录
+                //TODO 记录,交给服务器去记录，本地只记录箱子状态
                 ActivityDispatcher.goAdmin(this, null);
                 this.finish();
                 break;
             case STUDENT:
                 //TODO 开箱，记录开箱数据
-                mDelegate.openBox();
+                mDelegate.openBox(cardOrStudentId);
                 this.finish();
                 break;
         }

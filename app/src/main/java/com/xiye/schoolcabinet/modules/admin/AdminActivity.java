@@ -116,10 +116,25 @@ public class AdminActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    public void onBackPressed() {
+        String cabinetId = ConfigManager.getCabinetId();
+        if (!Tools.isStringEmpty(cabinetId)) {
+            super.onBackPressed();
+        } else {
+            ToastHelper.showShortToast(R.string.cabinet_id_necessary);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:
-                this.finish();
+                String cabinetId = ConfigManager.getCabinetId();
+                if (!Tools.isStringEmpty(cabinetId)) {
+                    this.finish();
+                } else {
+                    ToastHelper.showShortToast(R.string.cabinet_id_necessary);
+                }
                 break;
             case R.id.btn_open_all:
                 mDelegate.openAllLock();
