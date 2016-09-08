@@ -24,8 +24,8 @@ public class App extends Application {
 		loadEnv();
 
 //		 TODO
-//		CrashHandler crashHandler = CrashHandler.getInstance();
-//		crashHandler.init(getApplicationContext());
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
 	}
 
 	private void loadEnv(){

@@ -57,7 +57,39 @@ public class BoxLogicManager {
     //    private static List<String> boxIdToOpenList = new ArrayList<>();
     private static List<BoxLogicItem> boxLogicItemToOpenList = new ArrayList<>();
     private static boolean isProcessing = false;
+    private static DelayTimer timeoutTimer = new DelayTimer(new DelayTimer.OnTimeToFinishActivityListener() {
+        @Override
+        public void onTimeToFinishActivity() {
+            if (isProcessing) {
+                mHandler.sendMessage(obtainMMessage(MSG_DATA_TRANS_TIME_OUT, currBoxId));
+            }
+        }
+    }, 2000);//超时时间2S
+    private static OnOpenBoxProcessListener mProcessListener = new OnOpenBoxProcessListener() {
+        @Override
+        public void onOpenProcessStart() {
+            timeoutTimer.startTimer();
+            isProcessing = true;
+        }
 
+        @Override
+        public void onOpenProcessRetry() {
+            timeoutTimer.cancelTimer();
+        }
+
+        @Override
+        public void onOpenProcessEnd() {
+            timeoutTimer.cancelTimer();
+
+            if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.size() > 0) {
+                boxLogicItemToOpenList.remove(0);
+            }
+
+            isProcessing = false;
+
+            openListTop();
+        }
+    };
     private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -127,41 +159,6 @@ public class BoxLogicManager {
                     }
                     break;
             }
-        }
-    };
-
-    private static DelayTimer timeoutTimer = new DelayTimer(new DelayTimer.OnTimeToFinishActivityListener() {
-        @Override
-        public void onTimeToFinishActivity() {
-            if (isProcessing) {
-                mHandler.sendMessage(obtainMMessage(MSG_DATA_TRANS_TIME_OUT, currBoxId));
-            }
-        }
-    }, 2000);//超时时间2S
-
-    private static OnOpenBoxProcessListener mProcessListener = new OnOpenBoxProcessListener() {
-        @Override
-        public void onOpenProcessStart() {
-            timeoutTimer.startTimer();
-            isProcessing = true;
-        }
-
-        @Override
-        public void onOpenProcessRetry() {
-            timeoutTimer.cancelTimer();
-        }
-
-        @Override
-        public void onOpenProcessEnd() {
-            timeoutTimer.cancelTimer();
-
-            if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.size() > 0) {
-                boxLogicItemToOpenList.remove(0);
-            }
-
-            isProcessing = false;
-
-            openListTop();
         }
     };
 
@@ -405,7 +402,7 @@ public class BoxLogicManager {
 
     private static String getCardId() {
         String cardId = "";
-        if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.get(0) != null) {
+        if (boxLogicItemToOpenList != null && boxLogicItemToOpenList.size() > 0 && boxLogicItemToOpenList.get(0) != null) {
             cardId = boxLogicItemToOpenList.get(0).cardId;
         }
         return cardId;
