@@ -231,7 +231,7 @@ public class BoxLogicManager {
             }
         }, DELAY_TIME);
 
-        //TIMEOUT_TIMER要用到
+        //TIMEOUT_TIMER要用到(因为板子返回的板子地址，不一定是boxId,所以都用这个currBoxId进行操作)
         currBoxId = Integer.parseInt(boxId);
 
 //        for (int i = 0; i < 3; i++) {
@@ -266,8 +266,9 @@ public class BoxLogicManager {
         if (buffer.length > 1) {//地址＋结果码
             int resultNo = TypeUtil.byteToInt(buffer[1]);
             //得到箱子编号
-            int boxId = TypeUtil.byteToInt(buffer[0]);
-            L.d(TAG, "onSerialPortBack [boxId]:" + boxId);
+            // 返回的是第一个板子地址
+            int boxId = currBoxId;
+            L.wtf(TAG, "onSerialPortBack [currentBoxId]:" + currBoxId);
             switch (resultNo) {
                 //这个开锁成功是给锁通电成功，锁通电门不一定开，还是要读的
                 case 0X59://开锁，成功
