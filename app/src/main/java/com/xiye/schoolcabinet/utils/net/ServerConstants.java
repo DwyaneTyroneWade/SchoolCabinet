@@ -3,7 +3,9 @@ package com.xiye.schoolcabinet.utils.net;
 public class ServerConstants {
 
     //TODO
-    public static String SERVER_URL = "http://121.43.168.53:8080";
+//    public static String SERVER_URL = "http://121.43.168.53:8080";
+    //学校内网地址
+    public static String SERVER_URL = "http://192.168.121.9:8080";
 
     public static int SUCCESS_CODE = 0;
 

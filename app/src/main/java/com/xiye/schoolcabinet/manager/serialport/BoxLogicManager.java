@@ -268,7 +268,7 @@ public class BoxLogicManager {
             //得到箱子编号
             // 返回的是第一个板子地址
             int boxId = currBoxId;
-            L.wtf(TAG, "onSerialPortBack [currentBoxId]:" + currBoxId);
+            L.d(TAG, "onSerialPortBack [currentBoxId]:" + currBoxId);
             switch (resultNo) {
                 //这个开锁成功是给锁通电成功，锁通电门不一定开，还是要读的
                 case 0X59://开锁，成功
