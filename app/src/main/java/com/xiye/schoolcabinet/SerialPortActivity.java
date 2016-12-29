@@ -183,7 +183,7 @@ public abstract class SerialPortActivity extends BaseActivity {
             SecurityException, IOException {
 //        mSerialPortICOutSide = mApplication.getSerialPort(0, "/dev/ttySAC0", 9600);
         //TODO
-        mSerialPortICOutSide = mApplication.getSerialPort(0, "/dev/ttyS1", 9600);
+        mSerialPortICOutSide = mApplication.getSerialPort(0, "/dev/ttySAC0", 9600);
         mOutputStreamICOutSide = mSerialPortICOutSide.getOutputStream();
         mInputStreamICOutSide = mSerialPortICOutSide.getInputStream();
     }
@@ -191,7 +191,7 @@ public abstract class SerialPortActivity extends BaseActivity {
     protected void initSerialPortICInSide() throws InvalidParameterException,
             SecurityException, IOException {
         //TODO
-        mSerialPortICInside = mApplication.getSerialPort(0, "/dev/ttyS2", 9600);
+        mSerialPortICInside = mApplication.getSerialPort(0, "/dev/ttySAC1", 9600);
         mOutputStreamICInside = mSerialPortICInside.getOutputStream();
         mInputStreamICInside = mSerialPortICInside.getInputStream();
     }
@@ -199,7 +199,7 @@ public abstract class SerialPortActivity extends BaseActivity {
     protected void initSerialPortLock() throws InvalidParameterException,
             SecurityException, IOException {
         //TODO
-        mSerialPortLock = mApplication.getSerialPort(0, "/dev/ttyS3", 9600);
+        mSerialPortLock = mApplication.getSerialPort(0, "/dev/ttySAC3", 9600);
         mOutputStreamLock = mSerialPortLock.getOutputStream();
         mInputStreamLock = mSerialPortLock.getInputStream();
     }
